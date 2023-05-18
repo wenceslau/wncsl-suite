@@ -21,6 +21,7 @@ public class GrpcClientService {
             final AccountGrpc response = this.accountBlockingStub.createAccount(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
+            System.err.println(e);
             return "FAILED with " + e.getStatus().getCode().name();
         }
     }

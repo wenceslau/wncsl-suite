@@ -18,11 +18,9 @@ public class GrpcServerInterceptor implements ServerInterceptor {
                                                       ServerCallHandler<ReqT, RespT> serverCallHandler) {
 
         log.info(serverCall.getMethodDescriptor().getFullMethodName());
-        System.out.println(serverCall.getMethodDescriptor().getServiceName());
-        System.out.println(serverCall.getSecurityLevel());
-        System.out.println(serverCall.getAttributes());
-        System.out.println(metadata.keys());
-
+        log.info(serverCall.getSecurityLevel() + "");
+        log.info(serverCall.getAttributes()+ "");
+        log.info(metadata.keys()+ "");
         return serverCallHandler.startCall(serverCall, metadata);
     }
 
