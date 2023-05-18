@@ -3,6 +3,7 @@ package com.suite.auth.grpc;
 import com.suite.auth.entity.Account;
 import com.suite.auth.service.AccountService;
 import com.wncsl.grpc.code.AccountGrpc;
+import com.wncsl.grpc.code.AccountList;
 import com.wncsl.grpc.code.AccountServiceGrpc;
 
 import io.grpc.stub.StreamObserver;
@@ -19,7 +20,6 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     private AccountService accountService;
 
     private static final Logger log = LoggerFactory.getLogger(GrpcServerService.class);
-
 
     @Override
     @Secured(value = "ROLE_CREATE_ACCOUNT")
@@ -45,5 +45,65 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
         responseObserver.onCompleted();
 
         log.info(reply.getStatus());
+    }
+
+    @Override
+    @Secured(value = "ROLE_CREATE_ACCOUNT")
+    public StreamObserver<AccountGrpc> createAccountStream(StreamObserver<AccountList> responseObserver) {
+
+        return new StreamObserver<>() {
+            AccountList.Builder accountListBuild = AccountList.newBuilder();
+
+            @Override
+            public void onNext(AccountGrpc accountGrpc) {
+                Account account = Account.build(accountGrpc);
+                account =  accountService.create(account);
+
+                AccountGrpc accountGrpcCreated = Account.build(account, "CREATED");
+                accountListBuild.addAccounts(accountGrpcCreated);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                log.error(throwable.getMessage(), throwable);
+            }
+
+            @Override
+            public void onCompleted() {
+                log.info("Processed completed! Records: " + accountListBuild.getAccountsCount());
+                responseObserver.onNext(accountListBuild.build());
+                responseObserver.onCompleted();
+            }
+        };
+    }
+
+    @Override
+    @Secured(value = "ROLE_CREATE_ACCOUNT")
+    public StreamObserver<AccountGrpc> createAccountStreamBidirectional(StreamObserver<AccountGrpc> responseObserver) {
+
+        return new StreamObserver<>() {
+            int i = 0;
+            @Override
+            public void onNext(AccountGrpc request) {
+                Account account = Account.build(request);
+                account =  accountService.create(account);
+
+                AccountGrpc reply = Account.build(account, "CREATED");
+                responseObserver.onNext(reply);
+                i++;
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                log.error(throwable.getMessage(), throwable);
+            }
+
+            @Override
+            public void onCompleted() {
+                log.info("Received completed! Records: " + i);
+                responseObserver.onCompleted();
+            }
+        };
+
     }
 }

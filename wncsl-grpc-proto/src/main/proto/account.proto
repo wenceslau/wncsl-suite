@@ -18,6 +18,12 @@ message AccountGrpc {
   string status = 5;
 }
 
+message AccountList {
+  repeated AccountGrpc accounts = 1;
+}
+
 service AccountService {
   rpc CreateAccount(AccountGrpc) returns (AccountGrpc) {}
+  rpc CreateAccountStream(stream AccountGrpc) returns (AccountList) {}
+  rpc CreateAccountStreamBidirectional(stream AccountGrpc) returns (stream AccountGrpc) {}
 }
