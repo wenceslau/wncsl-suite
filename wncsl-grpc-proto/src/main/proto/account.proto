@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.wncsl.grpc.code";
+package code;
+
+//message AccountCreateGrpc {
+//  string name = 2;
+//  string username = 3;
+//  string password = 4;
+//}
+
+message AccountGrpc {
+  int64 id = 1;
+  string name = 2;
+  string username = 3;
+  string password = 4;
+  string status = 5;
+}
+
+service AccountService {
+  rpc CreateAccount(AccountGrpc) returns (AccountGrpc) {}
+}
