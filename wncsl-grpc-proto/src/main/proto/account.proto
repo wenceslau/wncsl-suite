@@ -10,8 +10,12 @@ package code;
 //  string password = 4;
 //}
 
+//message UuidGrpc {
+//  string value = 1;
+//}
+
 message AccountGrpc {
-  int64 id = 1;
+  string id = 1;
   string name = 2;
   string username = 3;
   string password = 4;
