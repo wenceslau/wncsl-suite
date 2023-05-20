@@ -7,6 +7,8 @@ import javax.persistence.Id;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import lombok.*;
 public class Account {
 
     @Id
-    private Long id;
+    private UUID id;
     private String username;
     private String password;
 
@@ -29,7 +31,7 @@ public class Account {
 
     public static Account build(AccountGrpc accountGrpc){
         return Account.builder()
-                .id(accountGrpc.getId())
+                .id(UUID.fromString(accountGrpc.getId()))
                 .username(accountGrpc.getUsername())
                 .password(accountGrpc.getPassword())
                 .build();
@@ -37,7 +39,7 @@ public class Account {
 
     public static AccountGrpc build(Account account, String status){
         return AccountGrpc.newBuilder()
-                .setId(account.getId())
+                .setId(account.getId().toString())
                 .setUsername(account.getUsername())
                 .setPassword(account.getPassword())
                 .setStatus(status)

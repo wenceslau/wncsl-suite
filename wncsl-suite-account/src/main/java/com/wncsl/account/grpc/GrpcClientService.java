@@ -20,10 +20,10 @@ public class GrpcClientService {
 
     private static final Logger log = LoggerFactory.getLogger(GrpcClientService.class);
 
-    @GrpcClient("local-grpc-server")
+    @GrpcClient("auth-grpc-server")
     private AccountServiceBlockingStub accountBlockingStub;
 
-    @GrpcClient("local-grpc-server")
+    @GrpcClient("auth-grpc-server")
     private AccountServiceStub accountNonBlockingStub;
 
     public String createAccount(final Account account) {

@@ -1,0 +1,18 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: suite-registry
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    status-page-url-path: /actuator/info
+    health-check-url-path: /actuator/health
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 30
+  client:
+    register-with-eureka: false # Indica que esse servico nao precisa se registrar em nenhum eureka pq ela eh o server
+    fetch-registry: false # Nao busca nehum registro no eureka

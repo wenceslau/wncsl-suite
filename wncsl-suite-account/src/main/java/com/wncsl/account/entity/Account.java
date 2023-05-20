@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.UUID;
 
 
 @Builder
@@ -19,7 +20,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
     private String name;
     private String username;
     private String password;
@@ -33,7 +34,7 @@ public class Account {
 
     public static Account build(AccountGrpc accountGrpc){
         return Account.builder()
-                .id(accountGrpc.getId())
+                .id(UUID.fromString(accountGrpc.getId()))
                 .name(accountGrpc.getName())
                 .username(accountGrpc.getUsername())
                 .password(accountGrpc.getPassword())
@@ -42,7 +43,7 @@ public class Account {
 
     public static AccountGrpc build(Account account){
         return AccountGrpc.newBuilder()
-                .setId(account.getId())
+                .setId(account.getId().toString())
                 .setName(account.getName())
                 .setUsername(account.getUsername())
                 .setPassword(account.getPassword())

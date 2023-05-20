@@ -3,12 +3,12 @@ server:
 
 spring:
   application:
-    name: local-grpc-client
+    name: suite-account
 
   datasource:
     username: user
     url: jdbc:h2:mem:persistence
-    driverClassName: org.h2.Driver
+    driver-class-name: org.h2.Driver
     password: pass
 
   h2:
@@ -21,11 +21,18 @@ spring:
 
 grpc:
   client:
-    local-grpc-server:
-      address: 'static://127.0.0.1:9898'
+    auth-grpc-server:
+      address: 'discovery:///suite-auth'
       enableKeepAlive: true
       keepAliveWithoutCalls: true
       negotiationType: plaintext
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
 
 auth.username: user

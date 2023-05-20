@@ -10,15 +10,16 @@
     <version>1.0.1</version>
     <packaging>pom</packaging>
 
-<!--    <parent>-->
-<!--        <groupId>org.springframework.boot</groupId>-->
-<!--        <artifactId>spring-boot-starter-parent</artifactId>-->
-<!--        <version>2.7.11</version>-->
-<!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
-<!--    </parent>-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.11</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
     <modules>
         <module>wncsl-grpc-proto</module>
+        <module>wncsl-suite-registry</module>
         <module>wncsl-suite-account</module>
         <module>wncsl-suite-auth</module>
     </modules>
@@ -26,66 +27,9 @@
     <properties>
         <java.version>11</java.version>
         <spring.version>2.7.11</spring.version>
-        <grpc.version>1.55.1</grpc.version> <!--1.20.0 or 1.1.2-->
-        <protobuf.maven.plugin.version>0.5.0</protobuf.maven.plugin.version> <!-- or 3.23.0-->
-        <os.maven.plugin.version>1.4.1.Final</os.maven.plugin.version>
-        <protoc.version>3.2.0</protoc.version>
-        <protoc.gen.grpc.java.version>1.55.1</protoc.gen.grpc.java.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-
-        <!--Require to solve compatibility java version 11-->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.2</version>
-        </dependency>
-    </dependencies>
-
     <build>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>${os.maven.plugin.version}</version>
-            </extension>
-        </extensions>
-<!--        <pluginManagement>-->
-<!--            <plugins>-->
-<!--                <plugin>-->
-<!--                    <groupId>org.apache.maven.plugins</groupId>-->
-<!--                    <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                    <configuration>-->
-<!--                        <target>${java.version}</target>-->
-<!--                        <source>${java.version}</source>-->
-<!--                    </configuration>-->
-<!--                </plugin>-->
-<!--                <plugin>-->
-<!--                    <groupId>org.springframework.boot</groupId>-->
-<!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                    <version>${spring.boot.maven.plugin.version}</version>-->
-<!--                    <executions>-->
-<!--                        <execution>-->
-<!--                            <goals>-->
-<!--                                <goal>repackage</goal>-->
-<!--                            </goals>-->
-<!--                        </execution>-->
-<!--                    </executions>-->
-<!--                </plugin>-->
-<!--            </plugins>-->
-<!--        </pluginManagement>-->
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
