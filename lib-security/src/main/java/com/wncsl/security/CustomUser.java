@@ -1,4 +1,4 @@
-package com.wncsl.security;//package com.wncsl.account.config;
+package com.wncsl.security;//package com.wncsl.account.infra.config;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

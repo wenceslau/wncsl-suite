@@ -1,4 +1,4 @@
-package com.wncsl.account.grpc;
+package com.wncsl.account.infra.grpc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,6 @@ import io.grpc.ForwardingClientCallListener;
 import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;
 import io.grpc.Status;
-import net.devh.boot.grpc.client.interceptor.GrpcGlobalClientInterceptor;
 
 public class GrpcClientInterceptor  implements ClientInterceptor {
 

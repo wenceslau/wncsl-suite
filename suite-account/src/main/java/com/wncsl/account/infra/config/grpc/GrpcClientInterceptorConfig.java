@@ -1,6 +1,6 @@
-package com.wncsl.account.config.grpc;
+package com.wncsl.account.infra.config.grpc;
 
-import com.wncsl.account.grpc.GrpcClientInterceptor;
+import com.wncsl.account.infra.grpc.GrpcClientInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

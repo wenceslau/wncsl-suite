@@ -1,4 +1,4 @@
-package com.wncsl.account.config.grpc;
+package com.wncsl.account.infra.config.grpc;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

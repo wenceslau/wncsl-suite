@@ -1,4 +1,4 @@
-package com.wncsl.account.config.oauth;
+package com.wncsl.account.infra.config.oauth;
 
 import com.wncsl.security.config.WebServerSecurityConfig;
 import org.springframework.context.annotation.Bean;

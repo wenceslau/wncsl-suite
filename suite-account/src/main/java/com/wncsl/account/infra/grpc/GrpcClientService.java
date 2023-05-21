@@ -1,6 +1,6 @@
-package com.wncsl.account.grpc;
+package com.wncsl.account.infra.grpc;
 
-import com.wncsl.account.entity.Account;
+import com.wncsl.account.application.AccountDTO;
 import com.wncsl.grpc.code.AccountGrpc;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceBlockingStub;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceStub;
@@ -26,9 +26,9 @@ public class GrpcClientService {
     @GrpcClient("auth-grpc-server")
     private AccountServiceStub accountNonBlockingStub;
 
-    public String createAccount(final Account account) {
+    public String createAccount(final AccountDTO accountDTO) {
         try {
-            AccountGrpc request = Account.build(account);
+            AccountGrpc request = build(accountDTO);
             final AccountGrpc response = this.accountBlockingStub.createAccount(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
@@ -37,7 +37,7 @@ public class GrpcClientService {
         }
     }
 
-    public void createCategoryStreamBidirectional(final List<Account> accountList){
+    public void createCategoryStreamBidirectional(final List<AccountDTO> accountDTOlList){
         StreamObserver<AccountGrpc> streamObserver = new StreamObserver<>() {
 
             int processed = 0;
@@ -61,8 +61,8 @@ public class GrpcClientService {
         StreamObserver<AccountGrpc> requestObserver = accountNonBlockingStub.createAccountStreamBidirectional(streamObserver);
 
         try {
-            for (Account account : accountList) {
-                AccountGrpc accountGrpc = Account.build(account);
+            for (AccountDTO accountDTO : accountDTOlList) {
+                AccountGrpc accountGrpc = build(accountDTO);
                 requestObserver.onNext(accountGrpc);
             }
         } catch (RuntimeException e) {
@@ -71,4 +71,14 @@ public class GrpcClientService {
 
         requestObserver.onCompleted();
     }
+
+    public AccountGrpc build(AccountDTO dto){
+        return AccountGrpc.newBuilder()
+                .setId(dto.getId().toString())
+                .setName(dto.getName())
+                .setUsername(dto.getUsername())
+                .setPassword(dto.getPassword())
+                .build();
+    }
+
 }

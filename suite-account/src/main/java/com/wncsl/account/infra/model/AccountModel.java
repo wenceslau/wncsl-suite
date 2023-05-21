@@ -1,6 +1,7 @@
-package com.wncsl.account.entity;
+package com.wncsl.account.infra.model;
 
-import com.wncsl.grpc.code.AccountGrpc;
+import com.wncsl.account.domain.entity.Account;
+import com.wncsl.account.application.AccountDTO;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -15,8 +16,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-public class Account {
+@Entity(name = "Account")
+public class AccountModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,22 +33,17 @@ public class Account {
                 '}';
     }
 
-    public static Account build(AccountGrpc accountGrpc){
-        return Account.builder()
-                .id(UUID.fromString(accountGrpc.getId()))
-                .name(accountGrpc.getName())
-                .username(accountGrpc.getUsername())
-                .password(accountGrpc.getPassword())
+    public AccountDTO toDTO(){
+        return AccountDTO.builder()
+                .id(id)
+                .name(name)
+                .username(username)
+                .password(password)
                 .build();
     }
 
-    public static AccountGrpc build(Account account){
-        return AccountGrpc.newBuilder()
-                .setId(account.getId().toString())
-                .setName(account.getName())
-                .setUsername(account.getUsername())
-                .setPassword(account.getPassword())
-                .build();
+    public Account toEntity(){
+        return new Account(id, name, username, password);
     }
 
     @Override
@@ -55,9 +51,9 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Account account = (Account) o;
+        AccountModel accountModel = (AccountModel) o;
 
-        return id.equals(account.id);
+        return id.equals(accountModel.id);
     }
 
     @Override
