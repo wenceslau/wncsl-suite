@@ -18,10 +18,11 @@
     </parent>
 
     <modules>
-        <module>wncsl-grpc-proto</module>
-        <module>wncsl-suite-registry</module>
-        <module>wncsl-suite-account</module>
-        <module>wncsl-suite-auth</module>
+        <module>lib-grpc-proto</module>
+        <module>lib-security</module>
+        <module>suite-registry</module>
+        <module>suite-account</module>
+        <module>suite-auth</module>
     </modules>
 
     <properties>
