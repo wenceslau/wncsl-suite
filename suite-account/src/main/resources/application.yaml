@@ -19,6 +19,10 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: 'true'
 
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: 'true'
+
 grpc:
   client:
     auth-grpc-server:

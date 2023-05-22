@@ -41,4 +41,14 @@ public class AccountRepositoryImpl implements AccountRepository {
                 .map(a-> a.toEntity())
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public boolean existByUsername(String username) {
+        return accountJpaRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existByUsernameAndNotEqualsId(String username, UUID id) {
+        return false;
+    }
 }

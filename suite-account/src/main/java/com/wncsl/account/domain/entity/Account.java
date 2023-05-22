@@ -1,8 +1,10 @@
 package com.wncsl.account.domain.entity;
 
-import com.wncsl.account.application.AccountDTO;
+import com.wncsl.account.presentation.application.AccountDTO;
+import com.wncsl.account.domain.BusinessException;
 import com.wncsl.account.infra.model.AccountModel;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class Account {
@@ -15,6 +17,7 @@ public class Account {
     public Account(String name, String username) {
         this.name = name;
         this.username = username;
+        createPassword(new Random().toString());
         validate();
     }
 
@@ -27,6 +30,11 @@ public class Account {
         this(name, username, password);
         this.id = id;
         //validateId();
+    }
+
+    public void defineId(UUID id){
+        validateId(id);
+        this.id = id;
     }
 
     public void createPassword(String password) {
@@ -57,38 +65,52 @@ public class Account {
         this.name = name;
     }
 
+    //region Getter
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+    //endregion
+
     //region Validates
     public void validate(){
        validateName(this.name);
        validateUsername(this.username);
     }
 
-    private void validateId() {
+    private void validateId(UUID id) {
         if (id == null) {
-            throw new RuntimeException("Id is required");
+            throw new BusinessException("Id is required");
         }
     }
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new RuntimeException("Name is required");
+            throw new BusinessException("Name is required");
         }
     }
 
     private void validateUsername(String username) {
         //TODO Identify in this design how to check if the username had already in database
         if (username == null || username.isBlank()) {
-            throw new RuntimeException("Username is required");
+            throw new BusinessException("Username is required");
         }
     }
 
     private void validatePassword(String password) {
         if (password == null || password.isBlank()) {
-            throw new RuntimeException("Password is required");
+            throw new BusinessException("Password is required");
         }
 
         if (password.length() < 3) {
-            throw new RuntimeException("Password require at least 3 character");
+            throw new BusinessException("Password require at least 3 character");
         }
     }
     //endregion

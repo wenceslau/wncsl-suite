@@ -1,4 +1,4 @@
-package com.wncsl.account.application;
+package com.wncsl.account.presentation.application;
 
 import com.wncsl.account.domain.entity.Account;
 import com.wncsl.account.infra.model.AccountModel;

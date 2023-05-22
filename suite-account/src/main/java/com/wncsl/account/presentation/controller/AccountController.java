@@ -1,7 +1,7 @@
-package com.wncsl.account.presentation;
+package com.wncsl.account.presentation.controller;
 
-import com.wncsl.account.application.AccountApplication;
-import com.wncsl.account.application.AccountDTO;
+import com.wncsl.account.presentation.application.AccountApplication;
+import com.wncsl.account.presentation.application.AccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

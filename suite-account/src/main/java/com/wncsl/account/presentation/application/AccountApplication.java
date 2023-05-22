@@ -1,7 +1,8 @@
-package com.wncsl.account.application;
+package com.wncsl.account.presentation.application;
 
 import com.wncsl.account.domain.entity.Account;
 import com.wncsl.account.domain.repository.AccountRepository;
+import com.wncsl.account.domain.service.DomainAccountService;
 import com.wncsl.account.infra.grpc.GrpcClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,17 +17,19 @@ public class AccountApplication {
     @Autowired
     private GrpcClientService grpcClientService;
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private DomainAccountService domainAccountService;
+
+    public AccountApplication(AccountRepository accountRepository) {
+        this.domainAccountService = new DomainAccountService(accountRepository);
+    }
 
     public AccountDTO create(AccountDTO accountDTO){
 
         Account account = accountDTO.toEntity();
 
-        UUID uuid = accountRepository.create(account);
+        domainAccountService.create(account);
 
         accountDTO = account.toDTO();
-        accountDTO.setId(uuid);
 
         grpcClientService.createAccount(accountDTO);
         //AccountClientGrpc accountClientGrpc = new AccountClientGrpc("localhost", 9090);
@@ -38,27 +41,25 @@ public class AccountApplication {
 
     public AccountDTO update(UUID id, AccountDTO accountDTO){
 
-        Account accountToSave  = accountRepository.find(id);
+        Account account  = domainAccountService.findById(id);
+        account.changeName(accountDTO.getName());
+        domainAccountService.update(account);
 
-        accountToSave.changeName(accountDTO.getName());
-
-        UUID uuid = accountRepository.update(accountToSave);
-
-        return accountToSave.toDTO();
+        return accountDTO;
 
     }
 
     public void changePassword(UUID id, String oldPassword, String newPassword){
 
-        Account accountToSave  = accountRepository.find(id);
-        accountToSave.changePassword(oldPassword, newPassword);
+        Account account  = domainAccountService.findById(id);
+        account.changePassword(oldPassword, newPassword);
 
-        accountRepository.update(accountToSave);
+        domainAccountService.update(account);
 
     }
 
     public List<AccountDTO> listAll() {
-        return accountRepository.findAll()
+        return domainAccountService.fildAll()
                 .stream()
                 .map(a -> a.toDTO())
                 .collect(Collectors.toList());
