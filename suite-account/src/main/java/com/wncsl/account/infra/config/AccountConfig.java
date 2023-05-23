@@ -1,7 +1,7 @@
 package com.wncsl.account.infra.config;
 
-import com.wncsl.account.infra.repository.db.AccountJpaRepository;
-import com.wncsl.account.infra.repository.domain.AccountRepositoryImpl;
+import com.wncsl.account.infra.domain.account.AccountJpaRepository;
+import com.wncsl.account.infra.domain.account.AccountRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

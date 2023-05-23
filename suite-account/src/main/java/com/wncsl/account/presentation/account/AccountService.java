@@ -1,8 +1,8 @@
-package com.wncsl.account.presentation.application;
+package com.wncsl.account.presentation.account;
 
-import com.wncsl.account.domain.entity.Account;
-import com.wncsl.account.domain.repository.AccountRepository;
-import com.wncsl.account.domain.service.DomainAccountService;
+import com.wncsl.account.domain.account.Account;
+import com.wncsl.account.domain.account.AccountRepository;
+import com.wncsl.account.domain.account.DomainAccountService;
 import com.wncsl.account.infra.grpc.GrpcClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,14 +12,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class AccountApplication {
+public class AccountService {
 
     @Autowired
     private GrpcClientService grpcClientService;
 
     private DomainAccountService domainAccountService;
 
-    public AccountApplication(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository) {
         this.domainAccountService = new DomainAccountService(accountRepository);
     }
 
@@ -36,7 +36,6 @@ public class AccountApplication {
         //accountClientGrpc.createAccount(account);
 
         return accountDTO;
-
     }
 
     public AccountDTO update(UUID id, AccountDTO accountDTO){
@@ -46,7 +45,6 @@ public class AccountApplication {
         domainAccountService.update(account);
 
         return accountDTO;
-
     }
 
     public void changePassword(UUID id, String oldPassword, String newPassword){
@@ -55,10 +53,10 @@ public class AccountApplication {
         account.changePassword(oldPassword, newPassword);
 
         domainAccountService.update(account);
-
     }
 
     public List<AccountDTO> listAll() {
+
         return domainAccountService.fildAll()
                 .stream()
                 .map(a -> a.toDTO())

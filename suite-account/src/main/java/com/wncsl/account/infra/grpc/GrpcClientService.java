@@ -1,6 +1,6 @@
 package com.wncsl.account.infra.grpc;
 
-import com.wncsl.account.presentation.application.AccountDTO;
+import com.wncsl.account.presentation.account.AccountDTO;
 import com.wncsl.grpc.code.AccountGrpc;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceBlockingStub;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceStub;

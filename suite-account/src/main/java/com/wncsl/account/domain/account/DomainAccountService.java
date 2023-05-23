@@ -1,8 +1,7 @@
-package com.wncsl.account.domain.service;
+package com.wncsl.account.domain.account;
 
 import com.wncsl.account.domain.BusinessException;
-import com.wncsl.account.domain.entity.Account;
-import com.wncsl.account.domain.repository.AccountRepository;
+import com.wncsl.account.domain._shared.InterfaceDomainService;
 
 import java.util.Set;
 import java.util.UUID;

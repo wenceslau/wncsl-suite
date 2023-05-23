@@ -1,8 +1,8 @@
-package com.wncsl.account.domain.entity;
+package com.wncsl.account.domain.account;
 
-import com.wncsl.account.presentation.application.AccountDTO;
+import com.wncsl.account.presentation.account.AccountDTO;
 import com.wncsl.account.domain.BusinessException;
-import com.wncsl.account.infra.model.AccountModel;
+import com.wncsl.account.infra.domain.account.AccountModel;
 
 import java.util.Random;
 import java.util.UUID;
@@ -24,12 +24,6 @@ public class Account {
     public Account(String name, String username, String password) {
         this(name, username);
         createPassword(password);
-    }
-
-    public Account(UUID id, String name, String username, String password) {
-        this(name, username, password);
-        this.id = id;
-        //validateId();
     }
 
     public void defineId(UUID id){
@@ -115,6 +109,7 @@ public class Account {
     }
     //endregion
 
+    //region Factory
     public AccountDTO toDTO(){
         return AccountDTO.builder()
                 .id(id)
@@ -132,4 +127,19 @@ public class Account {
                 .password(password)
                 .build();
     }
+
+    public static Account fromModel(AccountModel accountModel) {
+        Account account = new Account(accountModel.getName(), accountModel.getUsername());
+        account.id = accountModel.getId();
+        account.password = accountModel.getPassword();
+        return account;
+    }
+
+    public static Account fromMDto(AccountDTO accountDTO) {
+        Account account = new Account(accountDTO.getName(), accountDTO.getUsername());
+        account.id = accountDTO.getId();
+        account.password = accountDTO.getPassword();
+        return account;
+    }
+    //endregion
 }

@@ -1,6 +1,4 @@
-package com.wncsl.account.domain.service;
-
-import com.wncsl.account.domain.entity.Account;
+package com.wncsl.account.domain._shared;
 
 import java.util.Set;
 import java.util.UUID;

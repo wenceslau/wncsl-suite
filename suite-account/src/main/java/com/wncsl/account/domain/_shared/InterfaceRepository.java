@@ -1,4 +1,4 @@
-package com.wncsl.account.domain.repository;
+package com.wncsl.account.domain._shared;
 
 import java.util.Set;
 import java.util.UUID;

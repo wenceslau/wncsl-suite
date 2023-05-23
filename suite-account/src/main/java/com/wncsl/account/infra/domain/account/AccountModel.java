@@ -1,7 +1,7 @@
-package com.wncsl.account.infra.model;
+package com.wncsl.account.infra.domain.account;
 
-import com.wncsl.account.domain.entity.Account;
-import com.wncsl.account.presentation.application.AccountDTO;
+import com.wncsl.account.domain.account.Account;
+import com.wncsl.account.presentation.account.AccountDTO;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -33,17 +33,8 @@ public class AccountModel {
                 '}';
     }
 
-    public AccountDTO toDTO(){
-        return AccountDTO.builder()
-                .id(id)
-                .name(name)
-                .username(username)
-                .password(password)
-                .build();
-    }
-
     public Account toEntity(){
-        return new Account(id, name, username, password);
+        return Account.fromModel(this);
     }
 
     @Override
@@ -59,5 +50,14 @@ public class AccountModel {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public AccountDTO toDTO(){
+        return AccountDTO.builder()
+                .id(id)
+                .name(name)
+                .username(username)
+                .password(password)
+                .build();
     }
 }

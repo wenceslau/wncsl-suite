@@ -1,6 +1,6 @@
-package com.wncsl.account.domain.repository;
+package com.wncsl.account.domain.account;
 
-import com.wncsl.account.domain.entity.Account;
+import com.wncsl.account.domain._shared.InterfaceRepository;
 
 import java.util.UUID;
 
