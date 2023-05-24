@@ -1,7 +1,7 @@
-package com.wncsl.account.presentation.account;
+package com.wncsl.account.presentation.account.dto;
 
-import com.wncsl.account.domain.account.Account;
-import com.wncsl.account.infra.domain.account.AccountModel;
+import com.wncsl.account.domain.account.entity.Account;
+import com.wncsl.account.infra.domain.account.model.AccountModel;
 import lombok.*;
 
 import java.util.UUID;
@@ -15,8 +15,6 @@ public class AccountDTO {
     private String name;
     private String username;
     private String password;
-
-
 
     public Account toEntity(){
         return Account.fromMDto(this);

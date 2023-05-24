@@ -1,7 +1,7 @@
-package com.wncsl.account.infra.domain.account;
+package com.wncsl.account.infra.domain.account.model;
 
-import com.wncsl.account.domain.account.Account;
-import com.wncsl.account.presentation.account.AccountDTO;
+import com.wncsl.account.domain.account.entity.Account;
+import com.wncsl.account.presentation.account.dto.AccountDTO;
 import lombok.*;
 
 import javax.persistence.Entity;

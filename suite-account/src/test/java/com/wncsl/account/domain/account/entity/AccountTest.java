@@ -1,6 +1,7 @@
-package com.wncsl.account.domain.account;
+package com.wncsl.account.domain.account.entity;
 
 import com.wncsl.account.domain.BusinessException;
+import com.wncsl.account.domain.account.entity.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

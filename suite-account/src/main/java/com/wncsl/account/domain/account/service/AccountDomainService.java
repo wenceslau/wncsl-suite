@@ -1,16 +1,18 @@
-package com.wncsl.account.domain.account;
+package com.wncsl.account.domain.account.service;
 
 import com.wncsl.account.domain.BusinessException;
 import com.wncsl.account.domain._shared.InterfaceDomainService;
+import com.wncsl.account.domain.account.entity.Account;
+import com.wncsl.account.domain.account.repository.AccountRepository;
 
 import java.util.Set;
 import java.util.UUID;
 
-public class DomainAccountService implements InterfaceDomainService<Account> {
+public class AccountDomainService implements InterfaceDomainService<Account> {
 
     private AccountRepository accountRepository;
 
-    public DomainAccountService(AccountRepository accountRepository) {
+    public AccountDomainService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 

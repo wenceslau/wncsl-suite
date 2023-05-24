@@ -22,12 +22,20 @@ message AccountGrpc {
   string status = 5;
 }
 
+message PermissionGrpc {
+  string uuid = 1;
+  string role = 2;
+  string description = 3;
+  string status = 4;
+}
+
 message AccountList {
   repeated AccountGrpc accounts = 1;
 }
 
 service AccountService {
   rpc CreateAccount(AccountGrpc) returns (AccountGrpc) {}
+  rpc CreatePermission(PermissionGrpc) returns (PermissionGrpc) {}
   rpc CreateAccountStream(stream AccountGrpc) returns (AccountList) {}
   rpc CreateAccountStreamBidirectional(stream AccountGrpc) returns (stream AccountGrpc) {}
 }

@@ -1,8 +1,8 @@
-package com.wncsl.account.domain.account;
+package com.wncsl.account.domain.account.entity;
 
-import com.wncsl.account.presentation.account.AccountDTO;
+import com.wncsl.account.presentation.account.dto.AccountDTO;
 import com.wncsl.account.domain.BusinessException;
-import com.wncsl.account.infra.domain.account.AccountModel;
+import com.wncsl.account.infra.domain.account.model.AccountModel;
 
 import java.util.Random;
 import java.util.UUID;

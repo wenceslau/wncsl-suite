@@ -1,8 +1,7 @@
-package com.wncsl.account.infra.domain.account;
+package com.wncsl.account.infra.domain.account.repository;
 
-import com.wncsl.account.domain.account.Account;
-import com.wncsl.account.domain.account.AccountRepository;
-import com.wncsl.account.infra.domain.account.AccountJpaRepository;
+import com.wncsl.account.domain.account.entity.Account;
+import com.wncsl.account.domain.account.repository.AccountRepository;
 
 import java.util.Set;
 import java.util.UUID;

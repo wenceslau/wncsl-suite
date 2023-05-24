@@ -1,10 +1,12 @@
 package com.wncsl.account.infra.grpc;
 
-import com.wncsl.account.presentation.account.AccountDTO;
+import com.wncsl.account.presentation.account.dto.AccountDTO;
+import com.wncsl.account.presentation.account.dto.PermissionDTO;
 import com.wncsl.grpc.code.AccountGrpc;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceBlockingStub;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceStub;
 
+import com.wncsl.grpc.code.PermissionGrpc;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,17 @@ public class GrpcClientService {
         try {
             AccountGrpc request = build(accountDTO);
             final AccountGrpc response = this.accountBlockingStub.createAccount(request);
+            return response.getStatus();
+        } catch (final StatusRuntimeException e) {
+            System.err.println(e);
+            return "FAILED with " + e.getStatus().getCode().name();
+        }
+    }
+
+    public String createPermission(final PermissionDTO permissionDTO) {
+        try {
+            PermissionGrpc request = build(permissionDTO);
+            final PermissionGrpc response = this.accountBlockingStub.createPermission(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
             System.err.println(e);
@@ -74,10 +87,18 @@ public class GrpcClientService {
 
     public AccountGrpc build(AccountDTO dto){
         return AccountGrpc.newBuilder()
-                .setId(dto.getId().toString())
+                .setId(String.valueOf(dto.getId()))
                 .setName(dto.getName())
                 .setUsername(dto.getUsername())
                 .setPassword(dto.getPassword())
+                .build();
+    }
+
+    public PermissionGrpc build(PermissionDTO dto){
+        return PermissionGrpc.newBuilder()
+                .setUuid(String.valueOf(dto.getUuid()))
+                .setRole(dto.getRole())
+                .setDescription(dto.getDescription())
                 .build();
     }
 

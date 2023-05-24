@@ -1,9 +1,10 @@
-package com.wncsl.account.presentation.account;
+package com.wncsl.account.presentation.account.service;
 
-import com.wncsl.account.domain.account.Account;
-import com.wncsl.account.domain.account.AccountRepository;
-import com.wncsl.account.domain.account.DomainAccountService;
+import com.wncsl.account.domain.account.entity.Account;
+import com.wncsl.account.domain.account.repository.AccountRepository;
+import com.wncsl.account.domain.account.service.AccountDomainService;
 import com.wncsl.account.infra.grpc.GrpcClientService;
+import com.wncsl.account.presentation.account.dto.AccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,10 @@ public class AccountService {
     @Autowired
     private GrpcClientService grpcClientService;
 
-    private DomainAccountService domainAccountService;
+    private AccountDomainService domainAccountService;
 
     public AccountService(AccountRepository accountRepository) {
-        this.domainAccountService = new DomainAccountService(accountRepository);
+        this.domainAccountService = new AccountDomainService(accountRepository);
     }
 
     public AccountDTO create(AccountDTO accountDTO){
@@ -31,7 +32,7 @@ public class AccountService {
 
         accountDTO = account.toDTO();
 
-        grpcClientService.createAccount(accountDTO);
+        //grpcClientService.createAccount(accountDTO);
         //AccountClientGrpc accountClientGrpc = new AccountClientGrpc("localhost", 9090);
         //accountClientGrpc.createAccount(account);
 

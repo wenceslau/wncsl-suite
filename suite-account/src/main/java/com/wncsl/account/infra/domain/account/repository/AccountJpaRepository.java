@@ -1,10 +1,9 @@
-package com.wncsl.account.infra.domain.account;
+package com.wncsl.account.infra.domain.account.repository;
 
-import com.wncsl.account.infra.domain.account.AccountModel;
+import com.wncsl.account.infra.domain.account.model.AccountModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
