@@ -96,25 +96,6 @@ public class AuthServerConfig extends AuthServerSecurityConfig {
 		return new CustomTokenService();
 	}
 
-//	/**
-//	 * Metodo tb chamado durante o start da aplicacao, pelo Spring
-//	 * Adiciona uma assinatura para relacionar o Token com o Oauth2
-//	 * TODO estudar melhor a definicao da classe JwtAccessTokenConverter
-//	 */
-//	@Bean
-//	public JwtAccessTokenConverter accessTokenConverter() {
-//		return super.accessTokenConverter();
-//	}
-//
-//	/**
-//	 * Metodo tb chamado durante o start da aplicacao, pelo Spring
-//	 * Cria uma "Store" uma loja para tokens JWT
-//	 */
-//	@Bean
-//	public TokenStore tokenStore() {
-//		return super.tokenStore();
-//	}
-
 	////////////EVENTOS
 
 	/**

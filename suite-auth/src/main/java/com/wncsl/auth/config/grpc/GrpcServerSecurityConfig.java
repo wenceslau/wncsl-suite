@@ -1,5 +1,6 @@
 package com.wncsl.auth.config.grpc;
 
+import net.devh.boot.grpc.server.security.authentication.AnonymousAuthenticationReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -7,8 +8,14 @@ import net.devh.boot.grpc.server.security.authentication.BasicGrpcAuthentication
 import net.devh.boot.grpc.server.security.authentication.GrpcAuthenticationReader;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 // proxyTargetClass is required, if you use annotation driven security!
@@ -49,34 +56,4 @@ public class GrpcServerSecurityConfig {
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
-
-    // This could be your database lookup. There are some complete implementations in spring-security-web.
-    //@Bean
-//    UserDetailsService userDetailsService(final PasswordEncoder passwordEncoder) {
-//        return username -> {
-//            //log.info("Searching user: {}", username);
-//            switch (username) {
-//                case "guest": {
-//                    return new User(username, passwordEncoder.encode(username + "Password"), Collections.emptyList());
-//                }
-//                case "user": {
-//                    log.info("user found!");
-//                    //The SimpleGrantedAuthority must have to start with ROLE, mandatory
-//                    final List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_CREATE_ACCOUNT"));
-//                    return new User(username, passwordEncoder.encode(username + "Password"), authorities);
-//                }
-//                default: {
-//                    throw new UsernameNotFoundException("Could not find user!");
-//                }
-//            }
-//        };
-//    }
-
-    // Add the authentication providers to the manager.
-//    @Bean
-//    AuthenticationManager authenticationManager(final DaoAuthenticationProvider daoAuthenticationProvider) {
-//        final List<AuthenticationProvider> providers = new ArrayList<>();
-//        providers.add(daoAuthenticationProvider);
-//        return new ProviderManager(providers);
-//    }
 }

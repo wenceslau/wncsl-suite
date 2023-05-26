@@ -1,6 +1,7 @@
 package com.wncsl.auth.config;
 
-import com.wncsl.auth.entity.Account;
+import com.wncsl.auth.entity.User;
+import com.wncsl.auth.service.UserService;
 import com.wncsl.security.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,17 +20,17 @@ public class CustomDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public CustomUser loadUserByUsername(final String username) throws UsernameNotFoundException {
-        System.out.println(this.getClass().getSimpleName()+".loadUserByUsername: "+ LocalTime.now());
-        Account account;
+        System.out.println(this.getClass().getSimpleName()+".loadUserByUsername: "+ username + ": "+ LocalTime.now());
+        User user;
         try {
-            account = new Account();
-            account.setUsername("user");
-            account.setId(UUID.randomUUID());
-            String pass = (passwordEncoder.encode(username + "Password"));
-            SimpleGrantedAuthority role = new SimpleGrantedAuthority("ROLE_CREATE_ACCOUNT");
-            CustomUser customUser = new CustomUser("user", pass, List.of(role) );
+            user = userService.getByUsername(username);
+            SimpleGrantedAuthority role = new SimpleGrantedAuthority("ROLE_CREATE_USER_GRPC");
+            CustomUser customUser = new CustomUser(user.getUsername(), user.getPassword(), List.of(role) );
             return customUser;
         } catch (Exception e) {
             e.printStackTrace();

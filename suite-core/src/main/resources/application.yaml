@@ -1,0 +1,43 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: suite-core
+
+  datasource:
+    username: user
+    url: jdbc:h2:mem:persistence
+    driver-class-name: org.h2.Driver
+    password: pass
+
+  h2:
+    console:
+      enabled: 'true'
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: 'true'
+
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: 'true'
+
+grpc:
+  auth:
+    username: api
+    password: api123
+  client:
+    auth-grpc-server:
+      address: 'discovery:///suite-auth'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    hostname: localhost
+    prefer-ip-address: true

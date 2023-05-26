@@ -4,18 +4,8 @@ option java_multiple_files = true;
 option java_package = "com.wncsl.grpc.code";
 package code;
 
-//message AccountCreateGrpc {
-//  string name = 2;
-//  string username = 3;
-//  string password = 4;
-//}
-
-//message UuidGrpc {
-//  string value = 1;
-//}
-
-message AccountGrpc {
-  string id = 1;
+message UserGrpc {
+  string uuid = 1;
   string name = 2;
   string username = 3;
   string password = 4;
@@ -29,13 +19,13 @@ message PermissionGrpc {
   string status = 4;
 }
 
-message AccountList {
-  repeated AccountGrpc accounts = 1;
+message UserList {
+  repeated UserGrpc users = 1;
 }
 
 service AccountService {
-  rpc CreateAccount(AccountGrpc) returns (AccountGrpc) {}
+  rpc CreateUser(UserGrpc) returns (UserGrpc) {}
   rpc CreatePermission(PermissionGrpc) returns (PermissionGrpc) {}
-  rpc CreateAccountStream(stream AccountGrpc) returns (AccountList) {}
-  rpc CreateAccountStreamBidirectional(stream AccountGrpc) returns (stream AccountGrpc) {}
+  rpc CreateUserStream(stream UserGrpc) returns (UserList) {}
+  rpc CreateUserStreamBidirectional(stream UserGrpc) returns (stream UserGrpc) {}
 }

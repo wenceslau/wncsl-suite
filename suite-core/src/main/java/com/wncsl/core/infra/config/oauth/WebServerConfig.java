@@ -1,26 +1,29 @@
-package com.wncsl.security.config;
+package com.wncsl.core.infra.config.oauth;
 
+import com.wncsl.security.config.WebServerSecurityConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 
 @Configuration
-public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity          //Desliga todas as config default do spring security
+@EnableResourceServer       //This annotation provide access path that are protected by OAuth2
+@EnableGlobalMethodSecurity(securedEnabled = true) //This override the protected methods to provide custom implementations.
+public class WebServerConfig extends WebServerSecurityConfig {
+
 
     /**
      * Retorna um instancia de PasswordEncoder para ser usado pelo spring security
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(5);
+        return super.passwordEncoder();
     }
 
     /**
@@ -33,19 +36,14 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+
     /**
      * Configuracoes de recursos estaticos(js, css, imagens, etc.)
      * para serem acessados sem autenticacao
      */
     @Override
     public void configure(WebSecurity webSecurity) throws Exception {
-        webSecurity.ignoring()
-                .antMatchers("/**.html",
-                        "/v2/api-docs",
-                        "/webjars/**",
-                        "/configuration/**",
-                        "/swagger-resources/**",
-                        "/h2-console/**");
+        super.configure(webSecurity);
     }
 
 }

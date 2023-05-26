@@ -21,7 +21,7 @@
         <module>lib-grpc-proto</module>
         <module>lib-security</module>
         <module>suite-registry</module>
-        <module>suite-account</module>
+        <module>suite-core</module>
         <module>suite-auth</module>
     </modules>
 
