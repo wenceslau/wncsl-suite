@@ -50,6 +50,34 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     }
 
     @Override
+    public void updateUser(UserGrpc request, StreamObserver<UserGrpc> responseObserver) {
+
+        String status = "CREATED";
+        System.out.println(">>>>: "+request.getUuid());
+
+        try {
+            userService.update(User.build(request));
+        }catch (Exception ex){
+            status = "ERROR:"+ex.getMessage();
+            log.error(ex.getMessage(),ex);
+        }
+
+        UserGrpc reply = UserGrpc.newBuilder()
+                .setUuid(request.getUuid())
+                .setName(request.getName())
+                .setUsername(request.getUsername())
+                .setPassword(request.getPassword())
+                .setStatus(status)
+                .build();
+
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
+
+        log.info(reply.getStatus());
+
+    }
+
+    @Override
     @Secured(value = "ROLE_CREATE_USER_GRPC")
     public StreamObserver<UserGrpc> createUserStream(StreamObserver<UserList> responseObserver) {
 

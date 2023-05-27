@@ -9,7 +9,8 @@ message UserGrpc {
   string name = 2;
   string username = 3;
   string password = 4;
-  string status = 5;
+  repeated PermissionGrpc permissions = 5;
+  string status = 6;
 }
 
 message PermissionGrpc {
@@ -25,7 +26,9 @@ message UserList {
 
 service AccountService {
   rpc CreateUser(UserGrpc) returns (UserGrpc) {}
+  rpc UpdateUser(UserGrpc) returns (UserGrpc) {}
   rpc CreatePermission(PermissionGrpc) returns (PermissionGrpc) {}
+  rpc UpdatePermission(PermissionGrpc) returns (PermissionGrpc) {}
   rpc CreateUserStream(stream UserGrpc) returns (UserList) {}
   rpc CreateUserStreamBidirectional(stream UserGrpc) returns (stream UserGrpc) {}
 }

@@ -33,8 +33,9 @@ public class UserDomainServiceImpl implements UserDomainServicePort {
         return uuid;
     }
 
-    public void update(User user){
+    public UUID update(User user){
         userPersistencePort.update(user);
+        return user.getUuid();
     }
 
     public Set<User> fildAll() {

@@ -19,9 +19,9 @@ import net.devh.boot.grpc.client.inject.GrpcClient;
 import java.util.List;
 
 @Service
-public class GrpcClientService {
+public class GrpcAccountClientService {
 
-    private static final Logger log = LoggerFactory.getLogger(GrpcClientService.class);
+    private static final Logger log = LoggerFactory.getLogger(GrpcAccountClientService.class);
 
     @GrpcClient("auth-grpc-server")
     private AccountServiceBlockingStub accountBlockingStub;
@@ -40,10 +40,33 @@ public class GrpcClientService {
         }
     }
 
+    public String updateUser(final User user) {
+        try {
+            UserGrpc request = UserMapper.toGrpc(user);
+            final UserGrpc response = this.accountBlockingStub.updateUser(request);
+            return response.getStatus();
+        } catch (final StatusRuntimeException e) {
+            System.err.println(e);
+            return "FAILED with " + e.getStatus().getCode().name();
+        }
+    }
+
+
     public String createPermission(final PermissionDTO permissionDTO) {
         try {
             PermissionGrpc request = build(permissionDTO);
             final PermissionGrpc response = this.accountBlockingStub.createPermission(request);
+            return response.getStatus();
+        } catch (final StatusRuntimeException e) {
+            System.err.println(e);
+            return "FAILED with " + e.getStatus().getCode().name();
+        }
+    }
+
+    public String updatePermission(final PermissionDTO permissionDTO) {
+        try {
+            PermissionGrpc request = build(permissionDTO);
+            final PermissionGrpc response = this.accountBlockingStub.updatePermission(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
             System.err.println(e);

@@ -7,7 +7,7 @@ public interface InterfaceDomainService<T> {
 
     UUID create(T entity);
 
-    void update(T entity);
+    UUID update(T entity);
 
     Set<T> fildAll();
 

@@ -1,7 +1,8 @@
 package com.wncsl.core.adapters.inbound.rest.account.service;
 
+import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.service.UserDomainServiceImpl;
-import com.wncsl.core.adapters.outbound.grpc.GrpcClientService;
+import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +25,7 @@ class UserServiceTest {
     @Mock
     private UserDomainServiceImpl userDomainService;
     @Mock
-    private GrpcClientService grpcClientService;
+    private GrpcAccountClientService grpcAccountClientService;
     @Mock
     private PasswordEncoder passwordEncoder;
 
@@ -50,13 +52,62 @@ class UserServiceTest {
                 .build();
 
         Mockito.when(userDomainService.create(Mockito.any())).thenReturn(null);
-        Mockito.when(grpcClientService.createUser(Mockito.any())).thenReturn(null);
+        Mockito.when(grpcAccountClientService.createUser(Mockito.any())).thenReturn(null);
         Mockito.when(passwordEncoder.encode(Mockito.any())).thenReturn("12345678");
 
         userDTO = userService.create(userDTO);
 
         assertNotNull(userDTO.getPermissions());
         assertEquals(userDTO.getPermissions().size(), 1);
+
+    }
+
+    @Test
+    void changePassword_whenValueIsCorrect() {
+
+        UUID uuid = UUID.randomUUID();
+        User user = new User(uuid, "Name", "usr");
+        user.createPassword("123456");
+
+        String oldPass = "123456", newPass = "12345678";
+
+        String value = oldPass+"#&&#"+newPass;
+
+        value = Base64.getEncoder().encodeToString(value.getBytes());
+        System.out.println(value);
+
+        Mockito.when(userDomainService.findById(uuid)).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(oldPass)).thenReturn(oldPass);
+        Mockito.when(passwordEncoder.encode(newPass)).thenReturn(newPass);
+        Mockito.when(userDomainService.update(user)).thenReturn(null);
+
+        String finalValue = value;
+
+        assertDoesNotThrow(()-> userService.changePassword(uuid, finalValue));
+
+    }
+
+    @Test
+    void changePassword_whenValueIsNotCorrect() {
+
+        UUID uuid = UUID.randomUUID();
+        User user = new User(uuid, "Name", "usr");
+        user.createPassword("123456");
+
+        String oldPass = "123456", newPass = "12345678";
+
+        String value = "ops";
+
+        value = Base64.getEncoder().encodeToString(value.getBytes());
+
+        Mockito.when(userDomainService.findById(uuid)).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(oldPass)).thenReturn(oldPass);
+        Mockito.when(passwordEncoder.encode(newPass)).thenReturn(newPass);
+        Mockito.when(userDomainService.update(user)).thenReturn(null);
+
+        String finalValue = value;
+
+        assertThrows(RuntimeException.class, ()->userService.changePassword(uuid, finalValue));
 
     }
 }

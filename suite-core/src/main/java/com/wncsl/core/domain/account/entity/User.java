@@ -35,6 +35,9 @@ public class User {
     }
 
     public void changePassword(String oldPassword, String newPassword) {
+        System.out.println(password);
+        System.out.println(oldPassword);
+        System.out.println(newPassword);
         if (comparePassword(oldPassword) == false) {
             throw new BusinessException("The password does not match");
         }

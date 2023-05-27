@@ -25,10 +25,11 @@ public class PermissionDomainServiceImpl implements PermissionDomainServicePort 
         return uuid;
     }
 
-    public void update(Permission permission){
+    public UUID update(Permission permission){
 
         permissionPersistencePort.update(permission);
 
+        return permission.getUuid();
     }
 
     public Set<Permission> fildAll() {

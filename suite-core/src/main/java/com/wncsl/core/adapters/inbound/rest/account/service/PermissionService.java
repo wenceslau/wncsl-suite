@@ -3,9 +3,7 @@ package com.wncsl.core.adapters.inbound.rest.account.service;
 import com.wncsl.core.adapters.mappers.PermissionMapper;
 import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
-import com.wncsl.core.domain.account.ports.PermissionPersistencePort;
-import com.wncsl.core.domain.account.service.PermissionDomainServiceImpl;
-import com.wncsl.core.adapters.outbound.grpc.GrpcClientService;
+import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,7 @@ import java.util.stream.Collectors;
 public class PermissionService {
 
     @Autowired
-    private GrpcClientService grpcClientService;
+    private GrpcAccountClientService grpcAccountClientService;
 
     private PermissionDomainServicePort permissionDomainServiceImpl;
 
@@ -31,7 +29,7 @@ public class PermissionService {
         Permission permission = new Permission(null, permissionDTO.getRole(), permissionDTO.getDescription());
 
        permissionDomainServiceImpl.create(permission);
-       grpcClientService.createPermission(permissionDTO);
+       grpcAccountClientService.createPermission(permissionDTO);
 
        permissionDTO = PermissionMapper.toDto(permission);
 
@@ -42,7 +40,6 @@ public class PermissionService {
     public PermissionDTO update(UUID id, PermissionDTO permissionDTO){
 
         Permission permission  = permissionDomainServiceImpl.findById(id);
-        permission.changeRole(permissionDTO.getRole());
         permission.changeDescription(permissionDTO.getDescription());
         permissionDomainServiceImpl.update(permission);
 
