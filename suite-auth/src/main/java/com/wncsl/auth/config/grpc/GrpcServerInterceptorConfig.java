@@ -1,6 +1,6 @@
 package com.wncsl.auth.config.grpc;
 
-import com.wncsl.auth.grpc.GrpcServerInterceptor;
+import com.wncsl.auth.consumer.grpc.GrpcServerInterceptor;
 import org.springframework.context.annotation.Configuration;
 import net.devh.boot.grpc.server.interceptor.GrpcGlobalServerInterceptor;
 

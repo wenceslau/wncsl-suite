@@ -1,7 +1,7 @@
 package com.wncsl.auth.config;
 
-import com.wncsl.auth.entity.User;
-import com.wncsl.auth.service.UserService;
+import com.wncsl.auth.domain.user.User;
+import com.wncsl.auth.domain.user.UserService;
 import com.wncsl.security.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class CustomDetailsService implements UserDetailsService {

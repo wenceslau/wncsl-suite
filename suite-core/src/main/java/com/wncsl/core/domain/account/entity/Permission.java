@@ -1,8 +1,6 @@
 package com.wncsl.core.domain.account.entity;
 
 import com.wncsl.core.domain.BusinessException;
-import com.wncsl.core.infra.domain.account.model.PermissionModel;
-import com.wncsl.core.presentation.account.dto.PermissionDTO;
 
 import java.util.UUID;
 
@@ -14,11 +12,19 @@ public class Permission {
 
     private String description;
 
-    public Permission(String role, String description) {
-        validadeDescription(description);
-        this.uuid = UUID.randomUUID();
+    public Permission(UUID uuid, String role, String description) {
+        this.uuid = uuid;
         this.role = role;
         this.description = description;
+        validadeDescription(description);
+        generateUuid();
+    }
+
+    /**
+     * Constructor using only in domain package
+     */
+    protected Permission(UUID uuid){
+        this.uuid = uuid;
     }
 
     public void changeDescription(String description){
@@ -31,7 +37,7 @@ public class Permission {
         this.role = role;
     }
 
-
+    //region Getters
     public UUID getUuid() {
         return uuid;
     }
@@ -40,8 +46,17 @@ public class Permission {
         return role;
     }
 
+    public String getDescription() {
+        return description;
+    }
+    //endregion
 
     //region Validade
+    private void generateUuid(){
+        if (uuid == null){
+            uuid = UUID.randomUUID();
+        }
+    }
     private void validadeRole(String role) {
         if (role == null || role.isBlank()){
             throw new BusinessException("Role is required");
@@ -55,34 +70,4 @@ public class Permission {
     }
     //endregion
 
-    //region Factory
-    public PermissionDTO toDTO(){
-        return PermissionDTO.builder()
-                .uuid(uuid)
-                .role(role)
-                .description(description)
-                .build();
-    }
-    public static Permission fromMDto(PermissionDTO permissionDTO) {
-        Permission permission = new Permission(permissionDTO.getRole(), permissionDTO.getDescription());
-        permission.uuid = permissionDTO.getUuid();
-        return permission;
-    }
-
-    public PermissionModel toModel(){
-        return PermissionModel.builder()
-                .uuid(uuid)
-                .role(role)
-                .description(description)
-                .build();
-    }
-
-    public static Permission fromModel(PermissionModel permissionModel) {
-        Permission permission = new Permission(permissionModel.getRole(), permissionModel.getDescription());
-        permission.uuid = permissionModel.getUuid();
-        return permission;
-    }
-
-
-    //endregion
 }

@@ -4,14 +4,12 @@ import com.wncsl.core.domain.BusinessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
 class UserTest {
 
     @Test
     void validatePassword_shouldThrowErrorWhenPasswordIsInvalid() {
 
-        User user =  new User("User2", "user2", Collections.emptyList());
+        User user =  new User(null,"User2", "user2");
 
         Assertions.assertThrows(BusinessException.class, () -> user.createPassword("12"));
 
@@ -20,7 +18,7 @@ class UserTest {
     @Test
     void validatePassword_whenTheValueIsGreater3Character() {
 
-        User user =  new User("User2", "user2", Collections.emptyList());
+        User user =  new User(null,"User2", "user2");
 
         Assertions.assertDoesNotThrow(() -> user.createPassword("123"));
     }
@@ -34,7 +32,7 @@ class UserTest {
         String oldPass = "12345678";
         String newPass = "12345678";
 
-        User user = new User("User1", "usr1", Collections.emptyList());
+        User user = new User(null,"User1", "usr1");
         user.createPassword(oldPass);
 
         Assertions.assertThrows(BusinessException.class, () -> user.changePassword(oldPass, newPass));
@@ -50,7 +48,7 @@ class UserTest {
         String oldPass = "12345678";
         String newPass = "12345679";
 
-        User user = new User("User1", "usr1", Collections.emptyList());
+        User user = new User(null,"User1", "usr1");
         user.createPassword(oldPass);
 
         Assertions.assertDoesNotThrow(() -> user.changePassword(oldPass, newPass));
@@ -64,7 +62,7 @@ class UserTest {
     @Test
     void changePassword_whenOldPasswordIsNoEqualsCurrent(){
 
-        User user = new User("User1", "usr1", Collections.emptyList());
+        User user = new User(null,"User1", "usr1");
         user.createPassword("1234567890");
 
         String oldPass = "12345678";
@@ -80,7 +78,7 @@ class UserTest {
     @Test
     void changePassword_whenOldPasswordIsEqualsCurrent(){
 
-        User user = new User("User1", "usr1", Collections.emptyList());
+        User user = new User(null,"User1", "usr1");
         user.createPassword("12345678");
 
         String oldPass = "12345678";
