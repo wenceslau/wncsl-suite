@@ -1,8 +1,11 @@
 package com.wncsl.core.adapters.outbound.persistence;
 
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -12,6 +15,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(ListenerModel.class)
 public class Model {
@@ -26,7 +32,7 @@ public class Model {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PermissionModel that = (PermissionModel) o;
+        Model that = (Model) o;
 
         return uuid.equals(that.getUuid());
     }

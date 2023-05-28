@@ -51,9 +51,13 @@ class UserServiceTest {
                 .permissions(List.of(permissionDTO))
                 .build();
 
+        User user = new User(null ,userDTO.getName(), userDTO.getUsername());
+        user.addPermissionUuid(permissionDTO.getUuid());
+
         Mockito.when(userDomainService.create(Mockito.any())).thenReturn(null);
         Mockito.when(grpcAccountClientService.createUser(Mockito.any())).thenReturn(null);
         Mockito.when(passwordEncoder.encode(Mockito.any())).thenReturn("12345678");
+        Mockito.when(userDomainService.findById(Mockito.any())).thenReturn(user);
 
         userDTO = userService.create(userDTO);
 
