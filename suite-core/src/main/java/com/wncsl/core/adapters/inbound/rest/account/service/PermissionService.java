@@ -5,7 +5,6 @@ import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
 import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,47 +14,55 @@ import java.util.stream.Collectors;
 @Service
 public class PermissionService {
 
-    @Autowired
-    private GrpcAccountClientService grpcAccountClientService;
+    private final GrpcAccountClientService grpcAccountClientService;
 
-    private PermissionDomainServicePort permissionDomainServiceImpl;
+    private final PermissionDomainServicePort permissionDomainServicePort;
 
-    public PermissionService(PermissionDomainServicePort permissionDomainServiceImpl) {
-        this.permissionDomainServiceImpl = permissionDomainServiceImpl;
+    public PermissionService(PermissionDomainServicePort permissionDomainServiceImpl,
+                             GrpcAccountClientService grpcAccountClientService) {
+
+        this.permissionDomainServicePort = permissionDomainServiceImpl;
+        this.grpcAccountClientService = grpcAccountClientService;
     }
 
     public PermissionDTO create(PermissionDTO permissionDTO){
 
         Permission permission = new Permission(null, permissionDTO.getRole(), permissionDTO.getDescription());
 
-       permissionDomainServiceImpl.create(permission);
-       grpcAccountClientService.createPermission(permissionDTO);
+       permissionDomainServicePort.create(permission);
+       permission = permissionDomainServicePort.findById(permission.getUuid());
+       grpcAccountClientService.createPermission(permission);
 
        permissionDTO = PermissionMapper.toDto(permission);
-
 
         return permissionDTO;
     }
 
-    public PermissionDTO update(UUID id, PermissionDTO permissionDTO){
+    public PermissionDTO update(UUID uuid, PermissionDTO permissionDTO){
 
-        Permission permission  = permissionDomainServiceImpl.findById(id);
+        Permission permission  = permissionDomainServicePort.findById(uuid);
         permission.changeDescription(permissionDTO.getDescription());
-        permissionDomainServiceImpl.update(permission);
+
+        permissionDomainServicePort.update(permission);
+        grpcAccountClientService.updatePermission(permission);
+        permission = permissionDomainServicePort.findById(uuid);
+
+        permissionDTO = PermissionMapper.toDto(permission);
 
         return permissionDTO;
     }
 
     public List<PermissionDTO> listAll() {
 
-        return permissionDomainServiceImpl.fildAll()
+        return permissionDomainServicePort.fildAll()
                 .stream()
                 .map(p -> PermissionMapper.toDto(p))
                 .collect(Collectors.toList());
     }
 
     public PermissionDTO findById(UUID uuid) {
-        Permission permission = permissionDomainServiceImpl.findById(uuid);
+
+        Permission permission = permissionDomainServicePort.findById(uuid);
         return PermissionMapper.toDto(permission);
     }
 }

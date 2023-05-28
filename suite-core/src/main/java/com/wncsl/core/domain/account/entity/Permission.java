@@ -13,11 +13,11 @@ public class Permission {
     private String description;
 
     public Permission(UUID uuid, String role, String description) {
-        this.uuid = uuid;
+        validadeRole(role);
+        validadeDescription(description);
+        this.uuid = uuid != null ? uuid : UUID.randomUUID();
         this.role = role;
         this.description = description;
-        validadeDescription(description);
-        generateUuid();
     }
 
     /**
@@ -32,7 +32,7 @@ public class Permission {
         this.description = description;
     }
 
-    public void changeRole(String role){
+    private void changeRole(String role){
         validadeRole(role);
         this.role = role;
     }
@@ -52,11 +52,6 @@ public class Permission {
     //endregion
 
     //region Validade
-    private void generateUuid(){
-        if (uuid == null){
-            uuid = UUID.randomUUID();
-        }
-    }
     private void validadeRole(String role) {
         if (role == null || role.isBlank()){
             throw new BusinessException("Role is required");

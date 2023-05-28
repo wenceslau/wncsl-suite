@@ -34,7 +34,9 @@ public class UserDTO {
     @JsonView({Full.class, Resume.class, Insert.class, Update.class})
     private List<PermissionDTO> permissions;
 
-    public UserDTO() {
-        permissions = new ArrayList<>();
+    public List<PermissionDTO> getPermissions() {
+        if (permissions == null)
+            permissions = new ArrayList<>();
+        return permissions;
     }
 }

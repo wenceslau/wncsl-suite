@@ -18,8 +18,8 @@ public class User {
         this.username = username;
         this.permissions = permissions;
         generateUuid();
-        validate();
-    }
+        validateName(this.name);
+        validateUsername(this.username);    }
 
     public void addPermission(Permission permission){
         permissions.add(permission);
@@ -46,13 +46,6 @@ public class User {
             throw new BusinessException("The new password cannot be equals the previous");
         }
         this.password = password;
-    }
-
-    public boolean comparePassword(String password) {
-        if (password == null) {
-            return false;
-        }
-        return this.password.equals(password);
     }
 
     public void changeName(String name) {
@@ -94,11 +87,6 @@ public class User {
         }
     }
 
-    public void validate() {
-        validateName(this.name);
-        validateUsername(this.username);
-    }
-
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new BusinessException("Name is required");
@@ -121,6 +109,14 @@ public class User {
             throw new BusinessException("Password require at least 3 character");
         }
     }
+
+    private boolean comparePassword(String password) {
+        if (password == null) {
+            return false;
+        }
+        return this.password.equals(password);
+    }
+
     //endregion
 }
 

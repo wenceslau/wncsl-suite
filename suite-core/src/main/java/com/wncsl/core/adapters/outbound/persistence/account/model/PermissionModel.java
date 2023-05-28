@@ -1,5 +1,7 @@
 package com.wncsl.core.adapters.outbound.persistence.account.model;
 
+import com.wncsl.core.adapters.outbound.persistence.ListenerModel;
+import com.wncsl.core.adapters.outbound.persistence.Model;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,12 +14,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity(name = "Permissions")
-public class PermissionModel {
+@EntityListeners(ListenerModel.class)
+public class PermissionModel extends Model {
 
-    @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "uuid")
-    private UUID uuid;
     private String role;
     private String description;
 
@@ -26,21 +25,6 @@ public class PermissionModel {
         return "Permission{" +
                 "role='" + role + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PermissionModel that = (PermissionModel) o;
-
-        return uuid.equals(that.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
     }
 
 }

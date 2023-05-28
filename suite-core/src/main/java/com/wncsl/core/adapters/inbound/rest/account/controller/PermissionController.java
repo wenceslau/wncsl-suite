@@ -3,9 +3,9 @@ package com.wncsl.core.adapters.inbound.rest.account.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.inbound.rest.account.service.PermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +15,16 @@ import static com.wncsl.core.adapters.mappers.dto.View.*;
 
 @RestController
 @RequestMapping("/permissions")
-public class PermissionController {
+public class PermissionController  {
 
-    @Autowired
-    PermissionService permissionService;
+    private final String module = "PERMISSION";
+    private final String authUpdate = "hasAnyAuthority('ROLE_UPDATE_"+module+"')";
+    private final String authCreate = "hasAnyAuthority('ROLE_CREATE_"+module+"')";
+    private final PermissionService permissionService;
+
+    public PermissionController(PermissionService permissionService) {
+        this.permissionService = permissionService;
+    }
 
     @GetMapping()
     @JsonView({Full.class})
@@ -28,6 +34,7 @@ public class PermissionController {
 
     @PostMapping
     @JsonView({Full.class})
+    @PreAuthorize(authCreate)
     public ResponseEntity<PermissionDTO> create(
             @RequestBody @JsonView(Insert.class)  PermissionDTO permissionDTO) {
 
@@ -37,6 +44,7 @@ public class PermissionController {
 
     @PutMapping("{uuid}")
     @JsonView({Full.class})
+    @PreAuthorize(authUpdate)
     public ResponseEntity<PermissionDTO> update(
             @PathVariable UUID uuid,
             @RequestBody @JsonView(Update.class)  PermissionDTO permissionDTO) {
@@ -51,4 +59,6 @@ public class PermissionController {
         PermissionDTO permissionDTO = permissionService.findById(uuid);
         return ResponseEntity.status(HttpStatus.OK).body(permissionDTO);
     }
+
+
 }

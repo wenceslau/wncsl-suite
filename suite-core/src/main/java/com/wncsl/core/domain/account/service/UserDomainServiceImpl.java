@@ -55,4 +55,8 @@ public class UserDomainServiceImpl implements UserDomainServicePort {
         }
     }
 
+    @Override
+    public User findByUsername(String username) {
+        return userPersistencePort.findByUsername(username);
+    }
 }

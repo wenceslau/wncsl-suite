@@ -1,7 +1,9 @@
 package com.wncsl.core.adapters.outbound.grpc;
 
+import com.wncsl.core.adapters.mappers.PermissionMapper;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.UserMapper;
+import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceBlockingStub;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceStub;
@@ -35,8 +37,11 @@ public class GrpcAccountClientService {
             final UserGrpc response = this.accountBlockingStub.createUser(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
-            System.err.println(e);
-            return "FAILED with " + e.getStatus().getCode().name();
+            String error = "FAILED with " + e;
+            log.error(error);
+            try {Thread.sleep(1000);} catch (InterruptedException ex) { }
+            createUser(user);
+            return error;
         }
     }
 
@@ -46,31 +51,40 @@ public class GrpcAccountClientService {
             final UserGrpc response = this.accountBlockingStub.updateUser(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
-            System.err.println(e);
-            return "FAILED with " + e.getStatus().getCode().name();
+            String error = "FAILED with " + e;
+            log.error(error);
+            try {Thread.sleep(1000);} catch (InterruptedException ex) { }
+            updateUser(user);
+            return error;
         }
     }
 
 
-    public String createPermission(final PermissionDTO permissionDTO) {
+    public String createPermission(final Permission permission) {
         try {
-            PermissionGrpc request = build(permissionDTO);
+            PermissionGrpc request = PermissionMapper.toGrpc(permission);
             final PermissionGrpc response = this.accountBlockingStub.createPermission(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
-            System.err.println(e);
-            return "FAILED with " + e.getStatus().getCode().name();
+            String error = "FAILED with " + e;
+            log.error(error);
+            try {Thread.sleep(1000);} catch (InterruptedException ex) { }
+            createPermission(permission);
+            return error;
         }
     }
 
-    public String updatePermission(final PermissionDTO permissionDTO) {
+    public String updatePermission(final Permission permission) {
         try {
-            PermissionGrpc request = build(permissionDTO);
+            PermissionGrpc request = PermissionMapper.toGrpc(permission);
             final PermissionGrpc response = this.accountBlockingStub.updatePermission(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
-            System.err.println(e);
-            return "FAILED with " + e.getStatus().getCode().name();
+            String error = "FAILED with " + e;
+            log.error(error);
+            try {Thread.sleep(1000);} catch (InterruptedException ex) { }
+            updatePermission(permission);
+            return error;
         }
     }
 
@@ -108,13 +122,4 @@ public class GrpcAccountClientService {
 
         requestObserver.onCompleted();
     }
-
-    public PermissionGrpc build(PermissionDTO dto){
-        return PermissionGrpc.newBuilder()
-                .setUuid(String.valueOf(dto.getUuid()))
-                .setRole(dto.getRole())
-                .setDescription(dto.getDescription())
-                .build();
-    }
-
 }

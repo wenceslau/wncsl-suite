@@ -6,23 +6,6 @@ import org.junit.jupiter.api.Test;
 
 class UserTest {
 
-    @Test
-    void validatePassword_shouldThrowErrorWhenPasswordIsInvalid() {
-
-        User user =  new User(null,"User2", "user2");
-
-        Assertions.assertThrows(BusinessException.class, () -> user.createPassword("12"));
-
-    }
-
-    @Test
-    void validatePassword_whenTheValueIsGreater3Character() {
-
-        User user =  new User(null,"User2", "user2");
-
-        Assertions.assertDoesNotThrow(() -> user.createPassword("123"));
-    }
-
     /**
      * Error when the new and old password is the same
      */
@@ -88,5 +71,49 @@ class UserTest {
 
     }
 
+    @Test
+    void changeName_whenNameIsValid() {
 
+        User user = new User(null,"User1", "usr1");
+
+        user.changeName("User2");
+
+        Assertions.assertEquals("User2", user.getName());
+
+    }
+
+    @Test
+    void changeName_whenNameIsNull() {
+
+        User user = new User(null,"User1", "usr1");
+
+        Assertions.assertThrows(BusinessException.class, () -> user.changeName(null));
+
+    }
+
+    @Test
+    void changeName_whenNameIsBlank() {
+
+        User user = new User(null,"User1", "usr1");
+
+        Assertions.assertThrows(BusinessException.class, () -> user.changeName(""));
+
+    }
+
+    @Test
+    void validatePassword_shouldThrowErrorWhenPasswordIsInvalid() {
+
+        User user =  new User(null,"User2", "user2");
+
+        Assertions.assertThrows(BusinessException.class, () -> user.createPassword("12"));
+
+    }
+
+    @Test
+    void validatePassword_whenTheValueIsGreater3Character() {
+
+        User user =  new User(null,"User2", "user2");
+
+        Assertions.assertDoesNotThrow(() -> user.createPassword("123"));
+    }
 }

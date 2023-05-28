@@ -5,11 +5,13 @@ import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.ports.UserPersistencePort;
 
+import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 
+@Transactional
 public class UserPersistencePortImpl implements UserPersistencePort {
 
     private UserJpaRepository userJpaRepository;
@@ -53,5 +55,13 @@ public class UserPersistencePortImpl implements UserPersistencePort {
     @Override
     public boolean existByUsernameAndNotEqualsId(String username, UUID id) {
         return false;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        UserModel model = userJpaRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Username "+username+" not found!"));
+
+        return UserMapper.toEntity(model);
     }
 }

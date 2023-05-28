@@ -1,5 +1,7 @@
 package com.wncsl.auth;
 
+import com.wncsl.auth.domain.permission.Permission;
+import com.wncsl.auth.domain.permission.PermissionService;
 import com.wncsl.auth.domain.user.User;
 import com.wncsl.auth.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +13,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
 public class AuthMainInitialize {
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
+    private PermissionService permissionService;
+
     private PasswordEncoder passwordEncoder;
+
+    public AuthMainInitialize(UserService userService,
+                              PermissionService permissionService,
+                              PasswordEncoder passwordEncoder) {
+
+        this.userService = userService;
+        this.permissionService = permissionService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @EventListener
     private void applicationReadyEvent(ApplicationReadyEvent event) {
@@ -28,17 +40,24 @@ public class AuthMainInitialize {
         System.out.println(LocalDateTime.now() + " AccountMainInitialize.applicationReadyEvent() - INIT");
 
         UUID uuid = UUID.randomUUID();
-        System.out.println("UUID: " + uuid);
 
+        Permission permission = Permission.builder()
+                .uuid(uuid)
+                .role("ROLE_CREATE_USER_GRPC")
+                .description("Create user by gRPC")
+                .build();
+        permissionService.create(permission);
+        System.out.println("Permission created: " + permission.getUuid());
+
+        uuid = UUID.randomUUID();
         User user = User.builder()
                 .uuid(uuid)
                 .username("api")
                 .password(passwordEncoder.encode("api123"))
                 .type("GRPC")
+                .permissions(Set.of(permission))
                 .build();
-
         user =  userService.create(user);
-
         System.out.println("User created: " + user.getUuid());
 
         System.out.println(LocalDateTime.now() + " CoreAppListener.applicationReadyEvent() - END");

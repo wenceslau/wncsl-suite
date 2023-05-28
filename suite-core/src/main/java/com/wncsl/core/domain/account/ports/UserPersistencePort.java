@@ -11,4 +11,5 @@ public interface UserPersistencePort extends InterfacePersistence<User> {
 
     boolean existByUsernameAndNotEqualsId(String username, UUID id);
 
+    User findByUsername(String username);
 }

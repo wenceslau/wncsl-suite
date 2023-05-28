@@ -1,6 +1,7 @@
 package com.wncsl.core.adapters.outbound.persistence.account.repository;
 
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
+import com.wncsl.core.domain.account.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,5 @@ public interface UserJpaRepository extends JpaRepository<UserModel, UUID> {
 
     boolean existsByUsername(String username);
 
+    Optional<UserModel> findByUsername(String username);
 }

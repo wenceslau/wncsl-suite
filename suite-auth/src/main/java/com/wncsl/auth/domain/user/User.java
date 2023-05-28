@@ -1,12 +1,13 @@
 package com.wncsl.auth.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+import com.wncsl.auth.domain.permission.Permission;
 import com.wncsl.grpc.code.UserGrpc;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -24,29 +25,15 @@ public class User {
     private String password;
     private String type;
 
+    @ManyToMany(fetch = FetchType.LAZY) // ManyToMany, cria uma tabela de relacionamento entre os dois objetos
+    @JoinTable(name = "users_permissions", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_permission"))
+    private Set<Permission> permissions = new HashSet<>();
+
     @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
                 '}';
-    }
-
-    public static User build(UserGrpc userGrpc){
-        return User.builder()
-                .uuid(UUID.fromString(userGrpc.getUuid()))
-                .username(userGrpc.getUsername())
-                .password(userGrpc.getPassword())
-                .type("APP")
-                .build();
-    }
-
-    public static UserGrpc build(User user, String status){
-        return UserGrpc.newBuilder()
-                .setUuid(user.getUuid().toString())
-                .setUsername(user.getUsername())
-                .setPassword(user.getPassword())
-                .setStatus(status)
-                .build();
     }
 
     @Override

@@ -35,4 +35,6 @@ public class BeanConfig {
     public UserDomainServicePort createUserDomainServicePort(UserPersistencePort userPersistencePort, PermissionDomainServicePort permissionDomainServicePort){
         return  new UserDomainServiceImpl(userPersistencePort, permissionDomainServicePort );
     }
+
+
 }

@@ -27,12 +27,12 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private UserDomainServicePort userDomainService;
+    private UserDomainServicePort userDomainServicePort;
 
     private PermissionDomainServicePort permissionDomainService;
 
-    public UserService(UserDomainServicePort userDomainService, PermissionDomainServicePort permissionDomainService) {
-        this.userDomainService =userDomainService;
+    public UserService(UserDomainServicePort userDomainServicePort, PermissionDomainServicePort permissionDomainService) {
+        this.userDomainServicePort = userDomainServicePort;
         this.permissionDomainService = permissionDomainService;
     }
 
@@ -46,7 +46,8 @@ public class UserService {
             user.addPermissionUuid(permissionDTO.getUuid());
         }
 
-        userDomainService.create(user);
+        userDomainServicePort.create(user);
+        user = userDomainServicePort.findById(user.getId());
         grpcAccountClientService.createUser(user);
 
         userDTO = UserMapper.toDto(user);
@@ -56,10 +57,11 @@ public class UserService {
 
     public UserDTO update(UUID uuid, UserDTO userDTO){
 
-        User user = userDomainService.findById(uuid);
+        User user = userDomainServicePort.findById(uuid);
         user.changeName(userDTO.getName());
-        userDomainService.update(user);
-        grpcAccountClientService.updateUser(user);
+
+        userDomainServicePort.update(user);
+        user = updateUserGrpc(uuid);
 
         userDTO = UserMapper.toDto(user);
 
@@ -68,18 +70,18 @@ public class UserService {
 
     public UserDTO addPermissions(UUID userUuid, List<PermissionDTO> permissionDTOList){
 
-        User user = userDomainService.findById(userUuid);
+        User user = userDomainServicePort.findById(userUuid);
         for (PermissionDTO dto : permissionDTOList) {
             user.addPermissionUuid(dto.getUuid());
         }
-        userDomainService.update(user);
 
-        user = userDomainService.findById(userUuid);
+        userDomainServicePort.update(user);
+        user = updateUserGrpc(userUuid);
 
         return UserMapper.toDto(user);
     }
 
-    public void changePassword(UUID id, String value){
+    public void changePassword(UUID uuid, String value){
 
         String oldPassword = null;
         String newPassword = null;
@@ -93,22 +95,34 @@ public class UserService {
             throw new RuntimeException("Failure to decode password",e);
         }
 
-        User user = userDomainService.findById(id);
+        User user = userDomainServicePort.findById(uuid);
         user.changePassword(passwordEncoder.encode(oldPassword), passwordEncoder.encode(newPassword));
 
-        userDomainService.update(user);
+        userDomainServicePort.update(user);
+        updateUserGrpc(uuid);
+    }
+
+    private User updateUserGrpc(UUID uuid) {
+        User user = userDomainServicePort.findById(uuid);
+        grpcAccountClientService.updateUser(user);
+        return user;
     }
 
     public List<UserDTO> listAll(Pageable pageable) {
 
-        return userDomainService.fildAll()
+        return userDomainServicePort.fildAll()
                 .stream()
                 .map(entity -> UserMapper.toDto(entity))
                 .collect(Collectors.toList());
     }
 
     public UserDTO findById(UUID uuid) {
-        User user =  userDomainService.findById(uuid);
+        User user =  userDomainServicePort.findById(uuid);
+        return UserMapper.toDto(user);
+    }
+
+    public UserDTO findByUsername(String username){
+        User user =  userDomainServicePort.findByUsername(username);
         return UserMapper.toDto(user);
     }
 }
