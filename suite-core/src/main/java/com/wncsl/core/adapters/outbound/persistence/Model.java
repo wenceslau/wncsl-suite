@@ -1,6 +1,6 @@
 package com.wncsl.core.adapters.outbound.persistence;
 
-import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
+import com.wncsl.core.adapters.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 @Getter
@@ -23,9 +25,16 @@ import java.util.UUID;
 public class Model {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "uuid")
+    @Column(columnDefinition = "uuid", updatable= false)
     private UUID uuid;
+    @Column(updatable= false)
+    private LocalDateTime created;
+    private LocalDateTime updated;
+    private String hash;
+
+    public void generateHash(){
+        this.hash = String.valueOf(new Random().nextInt(9999));
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -42,4 +51,8 @@ public class Model {
         return uuid.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return Util.toJson(this,true);
+    }
 }

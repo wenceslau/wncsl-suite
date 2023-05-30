@@ -14,15 +14,11 @@ import java.util.stream.Collectors;
 @Service
 public class PermissionService {
 
-    private final GrpcAccountClientService grpcAccountClientService;
-
     private final PermissionDomainServicePort permissionDomainServicePort;
 
-    public PermissionService(PermissionDomainServicePort permissionDomainServiceImpl,
-                             GrpcAccountClientService grpcAccountClientService) {
+    public PermissionService(PermissionDomainServicePort permissionDomainServiceImpl) {
 
         this.permissionDomainServicePort = permissionDomainServiceImpl;
-        this.grpcAccountClientService = grpcAccountClientService;
     }
 
     public PermissionDTO create(PermissionDTO permissionDTO){
@@ -31,7 +27,7 @@ public class PermissionService {
 
        permissionDomainServicePort.create(permission);
        permission = permissionDomainServicePort.findById(permission.getUuid());
-       grpcAccountClientService.createPermission(permission);
+       //grpcAccountClientService.createPermission(permission);
 
        permissionDTO = PermissionMapper.toDto(permission);
 
@@ -44,7 +40,6 @@ public class PermissionService {
         permission.changeDescription(permissionDTO.getDescription());
 
         permissionDomainServicePort.update(permission);
-        grpcAccountClientService.updatePermission(permission);
         permission = permissionDomainServicePort.findById(uuid);
 
         permissionDTO = PermissionMapper.toDto(permission);

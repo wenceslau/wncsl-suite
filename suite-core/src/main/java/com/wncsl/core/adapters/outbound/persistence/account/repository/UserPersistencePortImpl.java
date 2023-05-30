@@ -6,6 +6,7 @@ import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.ports.UserPersistencePort;
 
 import javax.transaction.Transactional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,12 +23,16 @@ public class UserPersistencePortImpl implements UserPersistencePort {
 
     @Override
     public UUID create(User entity) {
-        return userJpaRepository.save(UserMapper.toModel(entity)).getUuid();
+        UserModel model = UserMapper.toModel(entity);
+        model.generateHash();
+        return userJpaRepository.save(model).getUuid();
     }
 
     @Override
     public UUID update(User entity) {
-        return userJpaRepository.save(UserMapper.toModel(entity)).getUuid();
+        UserModel model = UserMapper.toModel(entity);
+        model.generateHash();
+        return userJpaRepository.save(model).getUuid();
     }
 
     @Override

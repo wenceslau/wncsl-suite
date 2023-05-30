@@ -4,6 +4,12 @@ option java_multiple_files = true;
 option java_package = "com.wncsl.grpc.code";
 package code;
 
+enum ACTION{
+  CREATE = 0;
+  UPDATE = 1;
+  DELETE = 2;
+}
+
 message UserGrpc {
   string uuid = 1;
   string name = 2;
@@ -11,6 +17,7 @@ message UserGrpc {
   string password = 4;
   repeated PermissionGrpc permissions = 5;
   string status = 6;
+  ACTION action = 7;
 }
 
 message PermissionGrpc {
@@ -18,6 +25,7 @@ message PermissionGrpc {
   string role = 2;
   string description = 3;
   string status = 4;
+  ACTION action = 7;
 }
 
 message UserList {
@@ -25,10 +33,8 @@ message UserList {
 }
 
 service AccountService {
-  rpc CreateUser(UserGrpc) returns (UserGrpc) {}
-  rpc UpdateUser(UserGrpc) returns (UserGrpc) {}
-  rpc CreatePermission(PermissionGrpc) returns (PermissionGrpc) {}
-  rpc UpdatePermission(PermissionGrpc) returns (PermissionGrpc) {}
+  rpc SendUser(UserGrpc) returns (UserGrpc) {}
+  rpc SendPermission(PermissionGrpc) returns (PermissionGrpc) {}
   rpc CreateUserStream(stream UserGrpc) returns (UserList) {}
   rpc CreateUserStreamBidirectional(stream UserGrpc) returns (stream UserGrpc) {}
 }

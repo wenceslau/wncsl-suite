@@ -16,14 +16,14 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class UserDomainServiceImplTest {
+class UserDomainServicePortImplTest {
 
     @Mock
     UserPersistencePort userPersistencePort;
     @Mock
     PermissionDomainServicePort permissionDomainServicePort;
     @InjectMocks
-    UserDomainServiceImpl userDomainService = new UserDomainServiceImpl(userPersistencePort, permissionDomainServicePort);
+    UserDomainServicePortImpl userDomainService = new UserDomainServicePortImpl(userPersistencePort, permissionDomainServicePort);
 
     @BeforeEach
     void initializer(){

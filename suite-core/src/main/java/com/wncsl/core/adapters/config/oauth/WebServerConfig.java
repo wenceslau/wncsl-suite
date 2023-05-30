@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableWebSecurity          //Desliga todas as config default do spring security
 @EnableResourceServer       //This annotation provide access path that are protected by OAuth2
 //This annotation override the protected methods to provide custom implementations.
-//prePostEnabled allow you use PreAuthorize in your controllers
+//prePostEnabled allow you to use PreAuthorize in your controllers
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebServerConfig extends WebServerSecurityConfig {
 

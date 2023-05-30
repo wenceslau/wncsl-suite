@@ -39,26 +39,28 @@ public class AuthMainInitialize {
 
         System.out.println(LocalDateTime.now() + " AccountMainInitialize.applicationReadyEvent() - INIT");
 
-        UUID uuid = UUID.randomUUID();
-
-        Permission permission = Permission.builder()
-                .uuid(uuid)
-                .role("ROLE_CREATE_USER_GRPC")
+        Permission permUser = Permission.builder()
+                .uuid(UUID.randomUUID())
+                .role("ROLE_USER_GRPC")
                 .description("Create user by gRPC")
                 .build();
-        permissionService.create(permission);
-        System.out.println("Permission created: " + permission.getUuid());
+        permissionService.create(permUser);
 
-        uuid = UUID.randomUUID();
+        Permission permPermission = Permission.builder()
+                .uuid(UUID.randomUUID())
+                .role("ROLE_PERMISSION_GRPC")
+                .description("Create user by gRPC")
+                .build();
+        permissionService.create(permPermission);
+
         User user = User.builder()
-                .uuid(uuid)
+                .uuid( UUID.randomUUID())
                 .username("api")
                 .password(passwordEncoder.encode("api123"))
                 .type("GRPC")
-                .permissions(Set.of(permission))
+                .permissions(Set.of(permUser, permPermission))
                 .build();
-        user =  userService.create(user);
-        System.out.println("User created: " + user.getUuid());
+        userService.create(user);
 
         System.out.println(LocalDateTime.now() + " CoreAppListener.applicationReadyEvent() - END");
 

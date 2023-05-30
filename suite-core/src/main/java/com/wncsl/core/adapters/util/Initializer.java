@@ -1,5 +1,6 @@
 package com.wncsl.core.adapters.util;
 
+import com.wncsl.core.adapters.inbound.rest.account.controller.UserController;
 import com.wncsl.core.adapters.inbound.rest.account.service.PermissionService;
 import com.wncsl.core.adapters.inbound.rest.account.service.UserService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
@@ -55,9 +56,8 @@ public class Initializer {
                 .role("ROLE_UPDATE_USER").build();
         lst.add(permissionService.create(permissionDTO));
 
-        UserDTO user = userService.findByUsername("admin");
-        userService.addPermissions(user.getUuid(), lst);
-
+        UserDTO userDTO = userService.findByUsername("admin");
+        userService.addPermissions(userDTO.getUuid(), lst);
     }
 
 }

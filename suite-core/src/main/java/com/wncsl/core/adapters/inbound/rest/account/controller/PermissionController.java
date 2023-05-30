@@ -34,7 +34,7 @@ public class PermissionController  {
 
     @PostMapping
     @JsonView({Full.class})
-    @PreAuthorize(authCreate)
+    @PreAuthorize("hasAuthority('ROLE_CREATE_PERMISSION')")
     public ResponseEntity<PermissionDTO> create(
             @RequestBody @JsonView(Insert.class)  PermissionDTO permissionDTO) {
 

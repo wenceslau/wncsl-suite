@@ -14,18 +14,11 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "Permissions")
+@Entity(name = "permissions")
 @EntityListeners(ListenerModel.class)
 public class PermissionModel extends Model {
 
     private String role;
     private String description;
-
-    @Override
-    public String toString() {
-        return "Permission{" +
-                "role='" + role + '\'' +
-                '}';
-    }
 
 }

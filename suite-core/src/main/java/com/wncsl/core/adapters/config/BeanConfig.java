@@ -9,7 +9,7 @@ import com.wncsl.core.adapters.outbound.persistence.account.repository.UserPersi
 import com.wncsl.core.adapters.outbound.persistence.account.repository.PermissionJpaRepository;
 import com.wncsl.core.adapters.outbound.persistence.account.repository.PermissionPersistencePortImpl;
 import com.wncsl.core.domain.account.service.PermissionDomainServiceImpl;
-import com.wncsl.core.domain.account.service.UserDomainServiceImpl;
+import com.wncsl.core.domain.account.service.UserDomainServicePortImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,7 +33,7 @@ public class BeanConfig {
 
     @Bean
     public UserDomainServicePort createUserDomainServicePort(UserPersistencePort userPersistencePort, PermissionDomainServicePort permissionDomainServicePort){
-        return  new UserDomainServiceImpl(userPersistencePort, permissionDomainServicePort );
+        return  new UserDomainServicePortImpl(userPersistencePort, permissionDomainServicePort );
     }
 
 

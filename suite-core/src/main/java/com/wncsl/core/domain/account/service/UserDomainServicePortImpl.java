@@ -10,12 +10,12 @@ import com.wncsl.core.domain.account.ports.UserPersistencePort;
 import java.util.Set;
 import java.util.UUID;
 
-public class UserDomainServiceImpl implements UserDomainServicePort {
+public class UserDomainServicePortImpl implements UserDomainServicePort {
 
     private UserPersistencePort userPersistencePort;
     private PermissionDomainServicePort permissionDomainServicePort;
 
-    public UserDomainServiceImpl(UserPersistencePort userPersistencePort, PermissionDomainServicePort permissionDomainServicePort) {
+    public UserDomainServicePortImpl(UserPersistencePort userPersistencePort, PermissionDomainServicePort permissionDomainServicePort) {
         this.userPersistencePort = userPersistencePort;
         this.permissionDomainServicePort = permissionDomainServicePort;
     }

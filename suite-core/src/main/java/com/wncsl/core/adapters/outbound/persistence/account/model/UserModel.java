@@ -29,28 +29,10 @@ public class UserModel extends Model {
     @JoinTable(name = "users_permissions", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_permission"))
     private Set<PermissionModel> permissions;
 
-
     public Set<PermissionModel> getPermissions() {
         if (permissions == null)
             permissions = new HashSet<>();
         return permissions;
-    }
-
-    @Override
-    public void setUuid(UUID uuid) {
-        super.setUuid(uuid);
-    }
-
-    @Override
-    public UUID getUuid() {
-        return super.getUuid();
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                '}';
     }
 
 }

@@ -4,7 +4,6 @@ import com.wncsl.core.adapters.mappers.UserMapper;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
 import com.wncsl.core.domain.account.ports.UserDomainServicePort;
-import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +20,13 @@ import java.util.Base64;
 @Service
 public class UserService {
 
-    @Autowired
-    private GrpcAccountClientService grpcAccountClientService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private UserDomainServicePort userDomainServicePort;
+    private final UserDomainServicePort userDomainServicePort;
 
-    private PermissionDomainServicePort permissionDomainService;
+    private final PermissionDomainServicePort permissionDomainService;
 
     public UserService(UserDomainServicePort userDomainServicePort, PermissionDomainServicePort permissionDomainService) {
         this.userDomainServicePort = userDomainServicePort;
@@ -48,7 +45,6 @@ public class UserService {
 
         userDomainServicePort.create(user);
         user = userDomainServicePort.findById(user.getId());
-        grpcAccountClientService.createUser(user);
 
         userDTO = UserMapper.toDto(user);
 
@@ -61,7 +57,6 @@ public class UserService {
         user.changeName(userDTO.getName());
 
         userDomainServicePort.update(user);
-        user = updateUserGrpc(uuid);
 
         userDTO = UserMapper.toDto(user);
 
@@ -72,11 +67,12 @@ public class UserService {
 
         User user = userDomainServicePort.findById(userUuid);
         for (PermissionDTO dto : permissionDTOList) {
-            user.addPermissionUuid(dto.getUuid());
+            if (permissionDomainService.existByUuid(dto.getUuid())) {
+                user.addPermissionUuid(dto.getUuid());
+            }
         }
 
         userDomainServicePort.update(user);
-        user = updateUserGrpc(userUuid);
 
         return UserMapper.toDto(user);
     }
@@ -99,13 +95,6 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(oldPassword), passwordEncoder.encode(newPassword));
 
         userDomainServicePort.update(user);
-        updateUserGrpc(uuid);
-    }
-
-    private User updateUserGrpc(UUID uuid) {
-        User user = userDomainServicePort.findById(uuid);
-        grpcAccountClientService.updateUser(user);
-        return user;
     }
 
     public List<UserDTO> listAll(Pageable pageable) {

@@ -3,8 +3,11 @@ package com.wncsl.core.adapters.outbound.grpc;
 import com.wncsl.core.adapters.mappers.PermissionMapper;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.UserMapper;
+import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
+import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
 import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.User;
+import com.wncsl.grpc.code.ACTION;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceBlockingStub;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceStub;
 
@@ -31,64 +34,38 @@ public class GrpcAccountClientService {
     @GrpcClient("auth-grpc-server")
     private AccountServiceStub accountNonBlockingStub;
 
-    public String createUser(final User user) {
+    public String sendUser(final UserModel user, ACTION action) {
         try {
-            UserGrpc request = UserMapper.toGrpc(user);
-            final UserGrpc response = this.accountBlockingStub.createUser(request);
+            UserGrpc request = UserMapper.toGrpc(user, action);
+            request.toBuilder().setAction(action);
+            final UserGrpc response = this.accountBlockingStub.sendUser(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
             String error = "FAILED with " + e;
             log.error(error);
             try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            createUser(user);
+            sendUser(user,action);
             return error;
         }
     }
 
-    public String updateUser(final User user) {
+
+    public String sendPermission(final PermissionModel permission, ACTION action) {
         try {
-            UserGrpc request = UserMapper.toGrpc(user);
-            final UserGrpc response = this.accountBlockingStub.updateUser(request);
+            PermissionGrpc request = PermissionMapper.toGrpc(permission, action);
+            request.toBuilder().setAction(action);
+            final PermissionGrpc response = this.accountBlockingStub.sendPermission(request);
             return response.getStatus();
         } catch (final StatusRuntimeException e) {
             String error = "FAILED with " + e;
             log.error(error);
             try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            updateUser(user);
+            sendPermission(permission, action);
             return error;
         }
     }
 
-
-    public String createPermission(final Permission permission) {
-        try {
-            PermissionGrpc request = PermissionMapper.toGrpc(permission);
-            final PermissionGrpc response = this.accountBlockingStub.createPermission(request);
-            return response.getStatus();
-        } catch (final StatusRuntimeException e) {
-            String error = "FAILED with " + e;
-            log.error(error);
-            try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            createPermission(permission);
-            return error;
-        }
-    }
-
-    public String updatePermission(final Permission permission) {
-        try {
-            PermissionGrpc request = PermissionMapper.toGrpc(permission);
-            final PermissionGrpc response = this.accountBlockingStub.updatePermission(request);
-            return response.getStatus();
-        } catch (final StatusRuntimeException e) {
-            String error = "FAILED with " + e;
-            log.error(error);
-            try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            updatePermission(permission);
-            return error;
-        }
-    }
-
-    public void createCategoryStreamBidirectional(final List<User> userList){
+    public void createCategoryStreamBidirectional(final List<UserModel> userList){
         StreamObserver<UserGrpc> streamObserver = new StreamObserver<>() {
 
             int processed = 0;
@@ -112,8 +89,8 @@ public class GrpcAccountClientService {
         StreamObserver<UserGrpc> requestObserver = accountNonBlockingStub.createUserStreamBidirectional(streamObserver);
 
         try {
-            for (User user : userList) {
-                UserGrpc userGrpc = UserMapper.toGrpc(user);
+            for (UserModel user : userList) {
+                UserGrpc userGrpc = UserMapper.toGrpc(user, ACTION.CREATE);
                 requestObserver.onNext(userGrpc);
             }
         } catch (RuntimeException e) {

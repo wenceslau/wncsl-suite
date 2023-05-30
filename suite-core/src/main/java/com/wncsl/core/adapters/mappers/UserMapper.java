@@ -6,6 +6,7 @@ import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionMode
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
 import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.User;
+import com.wncsl.grpc.code.ACTION;
 import com.wncsl.grpc.code.PermissionGrpc;
 import com.wncsl.grpc.code.UserGrpc;
 
@@ -55,12 +56,11 @@ public class UserMapper {
                 .build();
     }
 
-
-    public static UserGrpc toGrpc(User entity){
+    public static UserGrpc toGrpc(UserModel entity, ACTION action){
 
         List<PermissionGrpc> lst = entity.getPermissions()
                 .stream()
-                .map(p-> PermissionMapper.toGrpc(p))
+                .map(p-> PermissionMapper.toGrpc(p,action))
                 .collect(Collectors.toList());
 
         return UserGrpc.newBuilder()
@@ -69,6 +69,7 @@ public class UserMapper {
                 .setUsername(entity.getUsername())
                 .setPassword(entity.getPassword())
                 .addAllPermissions(lst)
+                .setAction(action)
                 .build();
     }
 }

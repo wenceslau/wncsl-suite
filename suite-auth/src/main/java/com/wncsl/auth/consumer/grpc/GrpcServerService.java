@@ -31,14 +31,22 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     private static final Logger log = LoggerFactory.getLogger(GrpcServerService.class);
 
     @Override
-    @Secured(value = "ROLE_CREATE_USER_GRPC")
-    public void createUser(UserGrpc request, StreamObserver<UserGrpc> responseObserver) {
+    @Secured(value = "ROLE_USER_GRPC")
+    public void sendUser(UserGrpc request, StreamObserver<UserGrpc> responseObserver) {
 
         String status = "CREATED";
-        log.info(">>>>: Creating user uuid... "+request.getUuid());
+        log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getAction());
 
         try {
-            userService.create(UserMapper.build(request));
+            switch (request.getAction()){
+                case CREATE:
+                    userService.create(UserMapper.build(request));
+                    break;
+                case UPDATE:
+                    status = "UPDATED";
+                    userService.update(UserMapper.build(request));
+            }
+
         }catch (Exception ex){
             status = "ERROR:"+ex.getMessage();
             log.error(ex.getMessage(),ex);
@@ -49,39 +57,25 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
 
-        log.info(">>>>: Status created user... " + status);
+        log.info(">>>>: Status user... " + status);
     }
 
     @Override
-    public void updateUser(UserGrpc request, StreamObserver<UserGrpc> responseObserver) {
-
-        String status = "UPDATED";
-        log.info(">>>>: Updating user uuid... "+request.getUuid());
-
-        try {
-            userService.update(UserMapper.build(request));
-        }catch (Exception ex){
-            status = "ERROR:"+ex.getMessage();
-            log.error(ex.getMessage(),ex);
-        }
-
-        UserGrpc reply = UserMapper.clone(request, status);
-
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-
-        log.info(">>>>: Status updated user... " + status);
-
-    }
-
-    @Override
-    public void createPermission(PermissionGrpc request, StreamObserver<PermissionGrpc> responseObserver) {
+    @Secured(value = "ROLE_PERMISSION_GRPC")
+    public void sendPermission(PermissionGrpc request, StreamObserver<PermissionGrpc> responseObserver) {
 
         String status = "CREATED";
-        log.info(">>>>: Creating permission uuid... "+request.getUuid());
+        log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getAction());
 
         try {
-           permissionService.create(PermissionMapper.build(request));
+            switch (request.getAction()){
+                case CREATE:
+                    permissionService.create(PermissionMapper.build(request));
+                    break;
+                case UPDATE:
+                    status = "UPDATED";
+                    permissionService.update(PermissionMapper.build(request));
+            }
         }catch (Exception ex){
             status = "ERROR:"+ex.getMessage();
             log.error(ex.getMessage(),ex);
@@ -92,28 +86,8 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
 
-        log.info(">>>>: Status created permission... " + status);
+        log.info(">>>>: Status permission... " + status);
 
-    }
-
-    @Override
-    public void updatePermission(PermissionGrpc request, StreamObserver<PermissionGrpc> responseObserver) {
-        String status = "UPDATED";
-        log.info(">>>>: Updating permission uuid... "+request.getUuid());
-
-        try {
-            permissionService.update(PermissionMapper.build(request));
-        }catch (Exception ex){
-            status = "ERROR:"+ex.getMessage();
-            log.error(ex.getMessage(),ex);
-        }
-
-        PermissionGrpc reply = PermissionMapper.clone(request, status);
-
-        responseObserver.onNext(reply);
-        responseObserver.onCompleted();
-
-        log.info(">>>>: Status updated permission... " + status);
     }
 
     @Override
