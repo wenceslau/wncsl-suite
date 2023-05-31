@@ -9,4 +9,8 @@ import java.util.UUID;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, UUID> {
+
+    boolean existsByRole(String role);
+
+    boolean existsByRoleAndUuidIsNot(String role, UUID uuid);
 }

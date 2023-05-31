@@ -28,34 +28,32 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserGrpc build(User user, String status){
+    public static UserGrpc build(User user){
 
         List<PermissionGrpc> lst = user.getPermissions()
                 .stream()
-                .map(p -> PermissionMapper.build(p, status))
+                .map(p -> PermissionMapper.build(p))
                 .collect(Collectors.toList());
 
         return UserGrpc.newBuilder()
                 .setUuid(user.getUuid().toString())
                 .setUsername(user.getUsername())
                 .setPassword(user.getPassword())
-                .setStatus(status)
                 .addAllPermissions(lst)
                 .build();
     }
 
-    public static UserGrpc clone(UserGrpc request, String status) {
+    public static UserGrpc clone(UserGrpc request) {
 
         List<PermissionGrpc> lst = request.getPermissionsList()
                 .stream()
-                .map(p -> PermissionMapper.clone(p, status))
+                .map(p -> PermissionMapper.clone(p))
                 .collect(Collectors.toList());
 
         return UserGrpc.newBuilder()
                 .setUuid(request.getUuid().toString())
                 .setUsername(request.getUsername())
                 .setPassword(request.getPassword())
-                .setStatus(status)
                 .addAllPermissions(lst)
                 .build();
 

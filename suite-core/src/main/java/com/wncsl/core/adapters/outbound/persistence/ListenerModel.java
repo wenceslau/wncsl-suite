@@ -29,24 +29,24 @@ public class ListenerModel {
     @PrePersist
     public void prePersist(Model model) {
         model.setCreated(LocalDateTime.now());
-        System.out.println("prePersist: " + model);
+        System.out.println("@PrePersist: " + model);
     }
 
     @PreUpdate
     public void preUpdate(Model model) {
         model.setUpdated(LocalDateTime.now());
-        System.out.println("preUpdate: " + model);
+        System.out.println("@PreUpdate: " + model);
     }
 
     @PostPersist
     public void postPersist(Model model) {
-        System.out.println(">>>>>>>>>>"+model);
+        System.out.println("@PostPersist: "+model);
         sendToSuiteAuth(model, ACTION.CREATE);
     }
 
     @PostUpdate
     public void postUpdate(Model model) {
-        System.out.println(model);
+        System.out.println("@PostUpdate: "+model);
         sendToSuiteAuth(model, ACTION.UPDATE);
     }
 
@@ -57,9 +57,9 @@ public class ListenerModel {
 
     private void sendToSuiteAuth(Model model, ACTION action){
         if (model instanceof UserModel){
-            grpcAccountClientService.sendUser((UserModel) model, action);
+            grpcAccountClientService.addUser((UserModel) model, action);
         }else if (model instanceof PermissionModel){
-            grpcAccountClientService.sendPermission((PermissionModel) model, action);
+            grpcAccountClientService.addPermission((PermissionModel) model, action);
         }
     }
 }

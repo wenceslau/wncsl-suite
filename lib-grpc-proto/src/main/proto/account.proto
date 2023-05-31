@@ -10,22 +10,36 @@ enum ACTION{
   DELETE = 2;
 }
 
+enum STATUS{
+  CREATED = 0;
+  UPDATED = 1;
+  DELETED = 2;
+  ERROR = 3;
+
+}
+
+message Response {
+  STATUS status = 1;
+  int32 code = 2;
+  string object = 3;
+  string message = 4;
+
+}
+
 message UserGrpc {
   string uuid = 1;
   string name = 2;
   string username = 3;
   string password = 4;
   repeated PermissionGrpc permissions = 5;
-  string status = 6;
-  ACTION action = 7;
+  ACTION action = 6;
 }
 
 message PermissionGrpc {
   string uuid = 1;
   string role = 2;
   string description = 3;
-  string status = 4;
-  ACTION action = 7;
+  ACTION action = 4;
 }
 
 message UserList {
@@ -33,8 +47,8 @@ message UserList {
 }
 
 service AccountService {
-  rpc SendUser(UserGrpc) returns (UserGrpc) {}
-  rpc SendPermission(PermissionGrpc) returns (PermissionGrpc) {}
+  rpc addUser(UserGrpc) returns (Response) {}
+  rpc addPermission(PermissionGrpc) returns (Response) {}
   rpc CreateUserStream(stream UserGrpc) returns (UserList) {}
   rpc CreateUserStreamBidirectional(stream UserGrpc) returns (stream UserGrpc) {}
 }

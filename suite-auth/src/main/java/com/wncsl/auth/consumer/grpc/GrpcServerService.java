@@ -5,11 +5,8 @@ import com.wncsl.auth.domain.permission.PermissionService;
 import com.wncsl.auth.domain.user.User;
 import com.wncsl.auth.domain.user.UserMapper;
 import com.wncsl.auth.domain.user.UserService;
-import com.wncsl.grpc.code.PermissionGrpc;
-import com.wncsl.grpc.code.UserGrpc;
-import com.wncsl.grpc.code.AccountServiceGrpc;
+import com.wncsl.grpc.code.*;
 
-import com.wncsl.grpc.code.UserList;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
@@ -32,62 +29,76 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
 
     @Override
     @Secured(value = "ROLE_USER_GRPC")
-    public void sendUser(UserGrpc request, StreamObserver<UserGrpc> responseObserver) {
+    public void addUser(UserGrpc request, StreamObserver<Response> responseObserver) {
 
-        String status = "CREATED";
+        String message;
+        STATUS status = STATUS.CREATED;
         log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getAction());
 
         try {
             switch (request.getAction()){
                 case CREATE:
                     userService.create(UserMapper.build(request));
+                    status = STATUS.CREATED;
                     break;
                 case UPDATE:
-                    status = "UPDATED";
                     userService.update(UserMapper.build(request));
+                    status = STATUS.UPDATED;
             }
-
+            message = "Action successfully";
         }catch (Exception ex){
-            status = "ERROR:"+ex.getMessage();
+            status = STATUS.ERROR;
+            message = ex.getMessage();
             log.error(ex.getMessage(),ex);
         }
 
-        UserGrpc reply = UserMapper.clone(request, status);
+        Response response = Response.newBuilder()
+                .setStatus(status)
+                .setMessage(message)
+                .setObject(request.getClass().getSimpleName())
+                .build();
 
-        responseObserver.onNext(reply);
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
 
-        log.info(">>>>: Status user... " + status);
+        log.info(">>>>: Status... " + response);
     }
 
     @Override
     @Secured(value = "ROLE_PERMISSION_GRPC")
-    public void sendPermission(PermissionGrpc request, StreamObserver<PermissionGrpc> responseObserver) {
+    public void addPermission(PermissionGrpc request, StreamObserver<Response> responseObserver) {
 
-        String status = "CREATED";
+        String message;
+        STATUS status = STATUS.CREATED;
         log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getAction());
 
         try {
             switch (request.getAction()){
                 case CREATE:
                     permissionService.create(PermissionMapper.build(request));
+                    status = STATUS.CREATED;
                     break;
                 case UPDATE:
-                    status = "UPDATED";
                     permissionService.update(PermissionMapper.build(request));
+                    status = STATUS.UPDATED;
             }
+            message = "Action successfully";
         }catch (Exception ex){
-            status = "ERROR:"+ex.getMessage();
+            status = STATUS.ERROR;
+            message = ex.getMessage();
             log.error(ex.getMessage(),ex);
         }
 
-        PermissionGrpc reply = PermissionMapper.clone(request, status);
+        Response response = Response.newBuilder()
+                .setStatus(status)
+                .setMessage(message)
+                .setObject(request.getClass().getSimpleName())
+                .build();
 
-        responseObserver.onNext(reply);
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
 
-        log.info(">>>>: Status permission... " + status);
-
+        log.info(">>>>: Status... " + response);
     }
 
     @Override
@@ -102,7 +113,7 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
                 User user = UserMapper.build(userGrpc);
                 user =  userService.create(user);
 
-                UserGrpc userGrpcCreated = UserMapper.build(user, "CREATED");
+                UserGrpc userGrpcCreated = UserMapper.build(user);
                 accountListBuild.addUsers(userGrpcCreated);
             }
 
@@ -131,7 +142,7 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
                 User user = UserMapper.build(request);
                 user =  userService.create(user);
 
-                UserGrpc reply = UserMapper.build(user, "CREATED");
+                UserGrpc reply = UserMapper.build(user);
                 responseObserver.onNext(reply);
                 i++;
             }

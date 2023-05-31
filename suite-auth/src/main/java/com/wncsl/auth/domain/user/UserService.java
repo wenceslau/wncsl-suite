@@ -15,10 +15,20 @@ public class UserService {
     private UserRepository userRepository;
 
     public User create(User user){
+
+        if (userRepository.existsByUsername(user.getUsername())){
+           throw new RuntimeException("This user already exist!");
+        }
+
         return userRepository.save(user);
     }
 
     public User update(User user){
+
+        if (userRepository.existsByUsernameAndUuidIsNot(user.getUsername(), user.getUuid())){
+            throw new RuntimeException("This user already exist!");
+        }
+
         User userdb = userRepository.findById(user.getUuid()).get();
         BeanUtils.copyProperties(user, userdb);
         return userRepository.save(userdb);

@@ -1,18 +1,13 @@
 package com.wncsl.core.adapters.outbound.grpc;
 
 import com.wncsl.core.adapters.mappers.PermissionMapper;
-import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.UserMapper;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
-import com.wncsl.core.domain.account.entity.Permission;
-import com.wncsl.core.domain.account.entity.User;
-import com.wncsl.grpc.code.ACTION;
+import com.wncsl.grpc.code.*;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceBlockingStub;
 import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceStub;
 
-import com.wncsl.grpc.code.PermissionGrpc;
-import com.wncsl.grpc.code.UserGrpc;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,33 +29,39 @@ public class GrpcAccountClientService {
     @GrpcClient("auth-grpc-server")
     private AccountServiceStub accountNonBlockingStub;
 
-    public String sendUser(final UserModel user, ACTION action) {
+    public String addUser(final UserModel user, ACTION action) {
         try {
             UserGrpc request = UserMapper.toGrpc(user, action);
             request.toBuilder().setAction(action);
-            final UserGrpc response = this.accountBlockingStub.sendUser(request);
-            return response.getStatus();
+            final Response response = this.accountBlockingStub.addUser(request);
+            if (STATUS.ERROR.equals(response.getStatus())){
+                log.error(response.getMessage());
+            }
+            return response.getStatus().name();
         } catch (final StatusRuntimeException e) {
             String error = "FAILED with " + e;
             log.error(error);
             try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            sendUser(user,action);
+            addUser(user,action);
             return error;
         }
     }
 
 
-    public String sendPermission(final PermissionModel permission, ACTION action) {
+    public String addPermission(final PermissionModel permission, ACTION action) {
         try {
             PermissionGrpc request = PermissionMapper.toGrpc(permission, action);
             request.toBuilder().setAction(action);
-            final PermissionGrpc response = this.accountBlockingStub.sendPermission(request);
-            return response.getStatus();
+            final Response response = this.accountBlockingStub.addPermission(request);
+            if (STATUS.ERROR.equals(response.getStatus())){
+                log.error(response.getMessage());
+            }
+            return response.getStatus().name();
         } catch (final StatusRuntimeException e) {
             String error = "FAILED with " + e;
             log.error(error);
             try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            sendPermission(permission, action);
+            addPermission(permission, action);
             return error;
         }
     }
@@ -72,7 +73,7 @@ public class GrpcAccountClientService {
             @Override
             public void onNext(UserGrpc next) {
                 processed++;
-                log.info("Processed: " + next.getUuid() + " "+ next.getStatus());
+                log.info("Processed: " + next.getUuid() + " "+ next.getAction());
             }
 
             @Override
