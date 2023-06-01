@@ -29,7 +29,7 @@ public class PermissionService {
         }
 
         Permission permissiondb = permissionRepository.findById(permission.getUuid()).get();
-        BeanUtils.copyProperties(permission, permissiondb);
+        BeanUtils.copyProperties(permission, permissiondb, "uuid", "role");
         return permissionRepository.save(permissiondb);
     }
 

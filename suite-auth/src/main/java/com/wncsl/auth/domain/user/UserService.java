@@ -30,7 +30,7 @@ public class UserService {
         }
 
         User userdb = userRepository.findById(user.getUuid()).get();
-        BeanUtils.copyProperties(user, userdb);
+        BeanUtils.copyProperties(user, userdb, "uuid", "username");
         return userRepository.save(userdb);
     }
 
