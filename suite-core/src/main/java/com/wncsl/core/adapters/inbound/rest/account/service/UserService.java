@@ -2,6 +2,7 @@ package com.wncsl.core.adapters.inbound.rest.account.service;
 
 import com.wncsl.core.adapters.mappers.UserMapper;
 import com.wncsl.core.domain.account.entity.User;
+import com.wncsl.core.domain.account.entity.UserFactory;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
 import com.wncsl.core.domain.account.ports.UserDomainServicePort;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
@@ -35,7 +36,7 @@ public class UserService {
 
     public UserDTO create(UserDTO userDTO){
 
-        User user = new User(null ,userDTO.getName(), userDTO.getUsername());
+        User user = UserFactory.create(userDTO.getName(), userDTO.getUsername());
         user.validatePassword(userDTO.getPassword());
         user.createPassword(passwordEncoder.encode(userDTO.getPassword()));
 

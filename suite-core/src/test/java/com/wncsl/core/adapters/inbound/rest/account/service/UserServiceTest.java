@@ -1,6 +1,7 @@
 package com.wncsl.core.adapters.inbound.rest.account.service;
 
 import com.wncsl.core.domain.account.entity.User;
+import com.wncsl.core.domain.account.entity.UserFactory;
 import com.wncsl.core.domain.account.ports.UserDomainServicePort;
 import com.wncsl.core.domain.account.service.UserDomainServicePortImpl;
 import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
@@ -62,7 +63,7 @@ class UserServiceTest {
                 .permissions(List.of(permissionDTO))
                 .build();
 
-        User user = new User( UUID.randomUUID() ,userDTO.getName(), userDTO.getUsername());
+        User user = UserFactory.create(userDTO.getName(), userDTO.getUsername());
         user.addPermissionUuid(permissionDTO.getUuid());
 
         UUID uuid = UUID.randomUUID();
@@ -81,7 +82,7 @@ class UserServiceTest {
     void changePassword_whenValueIsCorrect() {
 
         UUID uuid = UUID.randomUUID();
-        User user = new User(uuid, "Name", "usr");
+        User user = UserFactory.createWithId(uuid, "Name", "usr");
         user.createPassword("123456");
 
         String oldPass = "123456", newPass = "12345678";
@@ -107,7 +108,7 @@ class UserServiceTest {
     void changePassword_whenValueIsNotCorrect() {
 
         UUID uuid = UUID.randomUUID();
-        User user = new User(uuid, "Name", "usr");
+        User user = UserFactory.createWithId(uuid, "Name", "usr");
         user.createPassword("123456");
 
         String oldPass = "123456", newPass = "12345678";

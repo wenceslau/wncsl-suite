@@ -12,14 +12,14 @@ public class User {
     private String password;
     private List<Permission> permissions = new ArrayList<>();
 
-    public User(UUID uuid, String name, String username) {
+    protected User(UUID uuid, String name, String username) {
         this.uuid = uuid;
         this.name = name;
         this.username = username;
         this.permissions = permissions;
-        generateUuid();
         validateName(this.name);
-        validateUsername(this.username);    }
+        validateUsername(this.username);
+    }
 
     public void addPermission(Permission permission){
         permissions.add(permission);
@@ -81,12 +81,6 @@ public class User {
     //endregion
 
     //region Validates
-    private void generateUuid() {
-        if (uuid == null) {
-            uuid = UUID.randomUUID();
-        }
-    }
-
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new BusinessException("Name is required");

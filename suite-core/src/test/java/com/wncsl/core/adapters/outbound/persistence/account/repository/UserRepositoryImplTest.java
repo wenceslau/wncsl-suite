@@ -3,6 +3,7 @@ package com.wncsl.core.adapters.outbound.persistence.account.repository;
 import com.wncsl.core.adapters.mappers.UserMapper;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
+import com.wncsl.core.domain.account.entity.UserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +31,7 @@ class UserRepositoryImplTest {
     @Test
     void create_successfully() {
 
-        User user = new User(null, "User", "usr");
+        User user = UserFactory.create("User", "usr");
         user.createPassword("12345678");
 
         UserModel userModel = UserMapper.toModel(user);

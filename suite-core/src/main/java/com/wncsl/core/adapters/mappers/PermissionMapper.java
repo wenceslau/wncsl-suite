@@ -3,13 +3,14 @@ package com.wncsl.core.adapters.mappers;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.domain.account.entity.Permission;
+import com.wncsl.core.domain.account.entity.PermissionFactory;
 import com.wncsl.grpc.code.ACTION;
 import com.wncsl.grpc.code.PermissionGrpc;
 
 public class PermissionMapper {
 
     public static Permission toEntity(PermissionModel model){
-        Permission entity = new Permission(model.getUuid(), model.getRole(), model.getDescription());
+        Permission entity = PermissionFactory.createWithId(model.getUuid(), model.getRole(), model.getDescription());
         return entity;
     }
 

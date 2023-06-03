@@ -1,6 +1,8 @@
 package com.wncsl.auth.config.oauth;
 
+import com.wncsl.auth.domain.logonhistory.LogonHistoryService;
 import com.wncsl.security.CustomUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -21,6 +23,9 @@ import java.util.Map;
 @Service
 public class CustomTokenService implements TokenEnhancer {
 
+	@Autowired
+	private LogonHistoryService logonHistoryService;
+
 	/**
 	 * Metodo usuado para adicionar diversos detalhes no token
 	 * Recebe o token padrao ja autenticado e adiciona informacoes relevantes
@@ -39,6 +44,9 @@ public class CustomTokenService implements TokenEnhancer {
 		addInfo.put("user_uid", userCustomSystem.getUsername());
 
 		((DefaultOAuth2AccessToken) accesToken).setAdditionalInformation(addInfo);
+
+//		logonHistoryService.auditLogon(userCustomSystem.getUser().getUsername(), "SUCCESS", userCustomSystem.getDevice(),
+//				userCustomSystem.getSector().getCode() + "");
 
 		return accesToken;
 	}

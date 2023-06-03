@@ -5,7 +5,9 @@ import com.wncsl.core.adapters.mappers.dto.UserDTO;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
 import com.wncsl.core.domain.account.entity.Permission;
+import com.wncsl.core.domain.account.entity.PermissionFactory;
 import com.wncsl.core.domain.account.entity.User;
+import com.wncsl.core.domain.account.entity.UserFactory;
 import com.wncsl.grpc.code.ACTION;
 import com.wncsl.grpc.code.PermissionGrpc;
 import com.wncsl.grpc.code.UserGrpc;
@@ -18,11 +20,11 @@ public class UserMapper {
 
     public static User toEntity(UserModel model){
 
-        User entity = new User(model.getUuid(), model.getName(), model.getUsername());
+        User entity = UserFactory.createWithId(model.getUuid(), model.getName(), model.getUsername());
         entity.createPassword(model.getPassword());
 
         for (PermissionModel p : model.getPermissions()) {
-            entity.addPermission(new Permission(p.getUuid(), p.getRole(), p.getDescription()));
+            entity.addPermission(PermissionFactory.createWithId(p.getUuid(), p.getRole(), p.getDescription()));
         }
         return entity;
     }

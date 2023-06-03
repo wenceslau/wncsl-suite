@@ -1,6 +1,13 @@
 package com.wncsl.auth.config.oauth;
 
+import com.wncsl.auth.consumer.grpc.GrpcServerInterceptor;
+import com.wncsl.auth.domain.logonhistory.LogonHistory;
+import com.wncsl.auth.domain.logonhistory.LogonHistoryService;
+import com.wncsl.auth.domain.user.User;
+import com.wncsl.security.CustomUser;
 import com.wncsl.security.config.AuthServerSecurityConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -19,8 +27,10 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * This class provide HTTP Basic authentication for endpoint /oauth/token
@@ -29,6 +39,7 @@ import java.util.Arrays;
  */
 @Configuration
 public class AuthServerConfig extends AuthServerSecurityConfig {
+	private static final Logger log = LoggerFactory.getLogger(GrpcServerInterceptor.class);
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -37,9 +48,8 @@ public class AuthServerConfig extends AuthServerSecurityConfig {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	@Autowired
-	private HttpServletRequest request;
+	private LogonHistoryService logonHistoryService;
 
-	////////////METODOS CONFIG
 
 	/**
 	 * Metodo que faz o join entre o OAuth2 e Spring Security
@@ -84,8 +94,6 @@ public class AuthServerConfig extends AuthServerSecurityConfig {
 			.accessTokenValiditySeconds(3600 * 3); // 3600 = 1 hora
 	}
 
-	////////////METODOS BEANS SPRING
-
 	/**
 	 * Disponibiliza uma instancia do CustomTokenEnhancer
 	 * Casse do modulo que customiza o conteudo do token
@@ -96,32 +104,31 @@ public class AuthServerConfig extends AuthServerSecurityConfig {
 		return new CustomTokenService();
 	}
 
-	////////////EVENTOS
-
 	/**
 	 * Evento dispara quando ha sucesso na autenticacao, via user ou token
 	 */
 	@EventListener
-	public void authSuccessEventListener(AuthenticationSuccessEvent authorizedEvent) {
-		System.out.println(this.getClass().getSimpleName()+".authSuccessEventListener: "+ LocalTime.now());
+	public void authSuccessEventListener(AuthenticationSuccessEvent authenticationSuccessEvent) {
 
-		Object source = authorizedEvent.getSource();
-		System.out.println("InstanceOf = " + source.getClass().getName());
+		Object source = authenticationSuccessEvent.getSource();
+		log.info("InstanceOf AuthenticationSuccessEvent.getSource() :.." + source.getClass().getName());
 
 		if (source instanceof OAuth2Authentication) {
-			//é uma autenticao com o token
-			OAuth2Authentication ase = (OAuth2Authentication) source;
-			System.err.println("Name "+  ase.getName());
+			OAuth2Authentication oa2a = (OAuth2Authentication) source;
+			log.info("EXECUTED WHEN A RESOURCE IS ACCESSED USING A VALID TOKEN. upat.getName():.." + oa2a.getName());
+			log.info("upat principal:.." + oa2a.getPrincipal());
+
 		} else if (source instanceof UsernamePasswordAuthenticationToken) {
-			//é uma autenticacao com usuario, seja o user da APP, ou o user final
 			UsernamePasswordAuthenticationToken upat = (UsernamePasswordAuthenticationToken) source;
-			if ("web".equals(upat.getName()) || "mobile".equals(upat.getName())) {
-				System.err.println("SUCESS APP WEB OU MOBILE " + upat.getName());
-			} else if ("access-token".equals(upat.getName())) {
-				System.err.println("SUCESS ACCESS USING TOKEN " + upat.getName());
-			} else {
-				//TODO colocar audit logon de sucess aqui
-				System.err.println("SUCESS USER REQUEST TOKEN " + upat.getName());
+			log.info("EXECUTED WHEN USER REQUEST A TOKEN, FIRST THE WEB CLIENT AND AFTER THE USER CLIENT. upat.getName():.." + upat.getName() );
+			log.info("upat principal:.." + upat.getPrincipal());
+
+			if (upat.getPrincipal() instanceof  CustomUser){
+				CustomUser cUsr = (CustomUser) upat.getPrincipal();
+				if (!"GRPC".equals(cUsr.getType())) {
+					logonHistoryService.auditLogon(cUsr.getUsername(), cUsr.getUserUuid(), "SUCCESS");
+				}
+
 			}
 		}
 	}
@@ -130,42 +137,31 @@ public class AuthServerConfig extends AuthServerSecurityConfig {
 	 * Evento dispara quando ocorre falha na autenticacao
 	 */
 	@EventListener
-	public void authFailedEventListener(AbstractAuthenticationFailureEvent oAuth2AuthenticationFailureEvent) {
-		System.out.println(this.getClass().getSimpleName()+".authFailedEventListener: "+ LocalTime.now());
+	public void authFailedEventListener(AbstractAuthenticationFailureEvent authenticationFailureEvent) {
 
-		Object source = oAuth2AuthenticationFailureEvent.getSource();
-		System.out.println("InstanceOf = " + source.getClass().getName());
+		String username = "";
+		Object source = authenticationFailureEvent.getSource();
+		log.info("InstanceOf AuthenticationFailureEvent.getSource() :.." + source.getClass().getName());
+		log.info("Exception().getMessage():.." + authenticationFailureEvent.getException().getMessage());
 
-		if (source instanceof OAuth2Authentication) {
-			//é uma autenticao com o token
-			OAuth2Authentication ase = (OAuth2Authentication) source;
-			System.err.println("Name "+  ase.getName());
-
-
-		} else if (source instanceof UsernamePasswordAuthenticationToken) {
-			//é uma autenticacao com usuario, seja o user da APP, ou o user final
-			UsernamePasswordAuthenticationToken upat = (UsernamePasswordAuthenticationToken) source;
-			if ("web".equals(upat.getName()) || "mobile".equals(upat.getName())) {
-				//Auth app web ou mobile
-				System.err.println("FAILURE APP WEB OU MOBILE " + upat.getName());
-			} else if ("access-token".equals(upat.getName())) {
-				System.err.println("FAILURE ACCESS USING TOKEN " + upat.getName());
-			} else {
-				//TODO colocar audit logon de pass errada aqui
-				System.err.println("FAILURE USER REQUEST TOKEN " + upat.getName() );
-			}
-		} else if (source instanceof PreAuthenticatedAuthenticationToken) {
-			//é uma autenticacao com usuario, seja o user da APP, ou o user final
-			PreAuthenticatedAuthenticationToken paat = (PreAuthenticatedAuthenticationToken) source;
-			if ("web".equals(paat.getName()) || "mobile".equals(paat.getName())) {
-				//Auth app web ou mobile
-				System.err.println("FAILURE APP WEB OU MOBILE " + paat.getName());
-			} else if ("access-token".equals(paat.getName())) {
-				System.err.println("FAILURE ACCESS USING TOKEN " + paat.getName());
-			} else {
-				System.err.println("FAILURE USER REQUEST TOKEN " + paat.getName() );
-			}
+		if (authenticationFailureEvent.getAuthentication() != null) {
+			username =  authenticationFailureEvent.getAuthentication().getName();
 		}
+
+		if (source instanceof UsernamePasswordAuthenticationToken) {
+			UsernamePasswordAuthenticationToken upat = (UsernamePasswordAuthenticationToken) source;
+			username = upat.getName();
+			log.info("EXECUTED WHEN USER OR PASS IS INVALID. upat.getName():.." + username);
+			log.info("upat principal:.." + upat.getPrincipal());
+
+		} else if (source instanceof PreAuthenticatedAuthenticationToken) {
+			PreAuthenticatedAuthenticationToken paat = (PreAuthenticatedAuthenticationToken) source;
+			username = paat.getName();
+			log.info("EXECUTED WHEN TOKE IS INVALID OR EXPIRED. paat.getName():.." + username);
+			log.info("paat principal:.." + paat.getPrincipal());
+		}
+
+		logonHistoryService.auditLogon(username, null, "FAILURE");
 	}
 
 }

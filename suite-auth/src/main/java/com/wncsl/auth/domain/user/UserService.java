@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User create(User user){
 
@@ -36,6 +39,14 @@ public class UserService {
 
     public User getByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("No found!"));
+    }
+
+    public User getByUsernameOrNull(String username){
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
+    public boolean existByUsername(String username){
+        return userRepository.existsByUsername(username);
     }
 
     public List<User> listAll(){

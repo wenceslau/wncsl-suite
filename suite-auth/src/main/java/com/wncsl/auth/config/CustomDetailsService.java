@@ -1,5 +1,6 @@
 package com.wncsl.auth.config;
 
+import com.wncsl.auth.domain.logonhistory.LogonHistoryService;
 import com.wncsl.auth.domain.user.User;
 import com.wncsl.auth.domain.user.UserService;
 import com.wncsl.security.CustomUser;
@@ -19,10 +20,10 @@ import java.util.stream.Collectors;
 public class CustomDetailsService implements UserDetailsService {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    private LogonHistoryService logonHistoryService;
 
     @Override
     @Transactional
@@ -35,10 +36,10 @@ public class CustomDetailsService implements UserDetailsService {
                     .stream()
                     .map(p-> new SimpleGrantedAuthority(p.getRole()))
                     .collect(Collectors.toList());
-            CustomUser customUser = new CustomUser(user.getUsername(), user.getPassword(), lst );
+            CustomUser customUser = new CustomUser(user.getUuid(), user.getUsername(), user.getPassword(), user.getType(), lst );
             return customUser;
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new UsernameNotFoundException("User " + username + " was not found in the database");
         }
     }

@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name = "Permissions")
+@Entity(name = "permissions")
 public class Permission {
 
     @Id

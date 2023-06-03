@@ -2,6 +2,7 @@ package com.wncsl.core.adapters.inbound.rest.account.service;
 
 import com.wncsl.core.adapters.mappers.PermissionMapper;
 import com.wncsl.core.domain.account.entity.Permission;
+import com.wncsl.core.domain.account.entity.PermissionFactory;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
 import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
@@ -23,7 +24,7 @@ public class PermissionService {
 
     public PermissionDTO create(PermissionDTO permissionDTO){
 
-        Permission permission = new Permission(null, permissionDTO.getRole(), permissionDTO.getDescription());
+        Permission permission = PermissionFactory.create(permissionDTO.getRole(), permissionDTO.getDescription());
 
        permissionDomainServicePort.create(permission);
        permission = permissionDomainServicePort.findById(permission.getUuid());

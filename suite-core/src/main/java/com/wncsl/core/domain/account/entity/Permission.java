@@ -12,7 +12,7 @@ public class Permission {
 
     private String description;
 
-    public Permission(UUID uuid, String role, String description) {
+    protected Permission(UUID uuid, String role, String description) {
         validadeRole(role);
         validadeDescription(description);
         this.uuid = uuid != null ? uuid : UUID.randomUUID();

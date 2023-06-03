@@ -2,6 +2,7 @@ package com.wncsl.core.domain.account.service;
 
 import com.wncsl.core.domain.BusinessException;
 import com.wncsl.core.domain.account.entity.User;
+import com.wncsl.core.domain.account.entity.UserFactory;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
 import com.wncsl.core.domain.account.ports.UserPersistencePort;
 import org.junit.jupiter.api.Assertions;
@@ -33,7 +34,7 @@ class UserDomainServicePortImplTest {
     @Test
     void create_whenIsAllValid() {
 
-        User user = new User(null,"User", "usr");
+        User user = UserFactory.create("User", "usr");
         user.createPassword("123456");
 
         UUID uuid = user.getId();
@@ -53,7 +54,7 @@ class UserDomainServicePortImplTest {
 
         Mockito.when(userPersistencePort.existByUsername(username)).thenReturn(true);
 
-        User user = new User(null,"User", username);
+        User user = UserFactory.create("User", username);
 
         Mockito.when(userPersistencePort.create(Mockito.any())).thenReturn(null);
 
@@ -68,7 +69,7 @@ class UserDomainServicePortImplTest {
 
         Mockito.when(permissionDomainServicePort.existByUuid(Mockito.any())).thenReturn(false);
 
-        User user = new User(null,"User", username);
+        User user = UserFactory.create("User", username);
         user.addPermissionUuid(UUID.randomUUID());
 
         Mockito.when(userPersistencePort.create(Mockito.any())).thenReturn(null);
