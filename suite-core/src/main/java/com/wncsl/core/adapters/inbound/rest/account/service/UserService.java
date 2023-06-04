@@ -7,7 +7,6 @@ import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
 import com.wncsl.core.domain.account.ports.UserDomainServicePort;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,17 @@ import java.util.Base64;
 public class UserService {
 
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final UserDomainServicePort userDomainServicePort;
 
     private final PermissionDomainServicePort permissionDomainService;
 
-    public UserService(UserDomainServicePort userDomainServicePort, PermissionDomainServicePort permissionDomainService) {
+    public UserService(PasswordEncoder passwordEncoder,
+                       UserDomainServicePort userDomainServicePort,
+                       PermissionDomainServicePort permissionDomainService) {
+
+        this.passwordEncoder = passwordEncoder;
         this.userDomainServicePort = userDomainServicePort;
         this.permissionDomainService = permissionDomainService;
     }

@@ -17,9 +17,6 @@ import static com.wncsl.core.adapters.mappers.dto.View.*;
 @RequestMapping("/permissions")
 public class PermissionController  {
 
-    private final String module = "PERMISSION";
-    private final String authUpdate = "hasAnyAuthority('ROLE_UPDATE_"+module+"')";
-    private final String authCreate = "hasAnyAuthority('ROLE_CREATE_"+module+"')";
     private final PermissionService permissionService;
 
     public PermissionController(PermissionService permissionService) {
@@ -28,13 +25,14 @@ public class PermissionController  {
 
     @GetMapping()
     @JsonView({Full.class})
+    @PreAuthorize(authView)
     public ResponseEntity<List<PermissionDTO>> listAll() {
         return ResponseEntity.status(HttpStatus.CREATED).body(permissionService.listAll());
     }
 
     @PostMapping
     @JsonView({Full.class})
-    @PreAuthorize("hasAuthority('ROLE_CREATE_PERMISSION')")
+    @PreAuthorize(authCreate)
     public ResponseEntity<PermissionDTO> create(
             @RequestBody @JsonView(Insert.class)  PermissionDTO permissionDTO) {
 
@@ -55,10 +53,13 @@ public class PermissionController  {
 
     @GetMapping("/uuid")
     @JsonView({Full.class})
+    @PreAuthorize(authView)
     public ResponseEntity<PermissionDTO> findById(UUID uuid) {
         PermissionDTO permissionDTO = permissionService.findById(uuid);
         return ResponseEntity.status(HttpStatus.OK).body(permissionDTO);
     }
 
-
+    private final String authUpdate = "hasAuthority('ROLE_UPDATE_PERMISSION')";
+    private final String authCreate = "hasAuthority('ROLE_CREATE_PERMISSION')";
+    private final String authView = "hasAuthority('ROLE_VIEW_PERMISSION')";
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
 import com.wncsl.core.adapters.inbound.rest.account.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -22,15 +21,15 @@ import static com.wncsl.core.adapters.mappers.dto.View.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private final String module = "USER";
-    private final String authUpdate = "hasAnyAuthority('ROLE_UPDATE_"+module+"')";
-    private final String authCreate = "hasAnyAuthority('ROLE_CREATE_"+module+"')";
+    private final UserService userService;
 
-    @Autowired
-    UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping()
     @JsonView({Full.class})
+    @PreAuthorize(authView)
     public ResponseEntity<List<UserDTO>> listAll(
             @PageableDefault() Pageable pageable) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.listAll(pageable));
@@ -69,6 +68,7 @@ public class UserController {
 
     @GetMapping("/{uuid}")
     @JsonView({Full.class})
+    @PreAuthorize(authView)
     public ResponseEntity<UserDTO> findById(
             @PathVariable UUID uuid) {
 
@@ -77,6 +77,7 @@ public class UserController {
 
     @PatchMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize(authUpdate)
     public void changePassword(
             @PathVariable UUID uuid,
             @RequestBody String value) {
@@ -84,4 +85,7 @@ public class UserController {
         userService.changePassword(uuid, value);
     }
 
+    private final String authUpdate = "hasAuthority('ROLE_UPDATE_USER')";
+    private final String authCreate = "hasAuthority('ROLE_CREATE_USER')";
+    private final String authView = "hasAuthority('ROLE_VIEW_USER')";
 }
