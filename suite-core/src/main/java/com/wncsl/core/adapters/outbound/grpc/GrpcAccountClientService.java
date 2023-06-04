@@ -32,7 +32,6 @@ public class GrpcAccountClientService {
     public String addUser(final UserModel user, ACTION action) {
         try {
             UserGrpc request = UserMapper.toGrpc(user, action);
-            request.toBuilder().setAction(action);
             final Response response = this.accountBlockingStub.addUser(request);
             if (STATUS.ERROR.equals(response.getStatus())){
                 log.error(response.getMessage());
@@ -51,7 +50,6 @@ public class GrpcAccountClientService {
     public String addPermission(final PermissionModel permission, ACTION action) {
         try {
             PermissionGrpc request = PermissionMapper.toGrpc(permission, action);
-            request.toBuilder().setAction(action);
             final Response response = this.accountBlockingStub.addPermission(request);
             if (STATUS.ERROR.equals(response.getStatus())){
                 log.error(response.getMessage());

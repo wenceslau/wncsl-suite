@@ -14,11 +14,14 @@ import java.util.List;
 @Service
 public class Initializer {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private PermissionService permissionService;
+    private final PermissionService permissionService;
+
+    public Initializer(UserService userService, PermissionService permissionService) {
+        this.userService = userService;
+        this.permissionService = permissionService;
+    }
 
     public void init(){
         createUsers();

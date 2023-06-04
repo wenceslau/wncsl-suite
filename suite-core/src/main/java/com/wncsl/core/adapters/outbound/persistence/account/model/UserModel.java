@@ -18,7 +18,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "users")
-@EntityListeners(ListenerModel.class)
 public class UserModel extends Model {
 
     private String name;

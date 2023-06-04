@@ -1,12 +1,11 @@
 package com.wncsl.auth.config.oauth;
 
-import com.wncsl.auth.domain.logonhistory.LogonHistoryService;
 import com.wncsl.security.CustomUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -20,11 +19,9 @@ import java.util.Map;
  * @author Wenceslau Neto
  *
  */
-@Service
-public class CustomTokenService implements TokenEnhancer {
+@Component
+public class CustomTokenConfig implements TokenEnhancer {
 
-	@Autowired
-	private LogonHistoryService logonHistoryService;
 
 	/**
 	 * Metodo usuado para adicionar diversos detalhes no token
@@ -41,12 +38,9 @@ public class CustomTokenService implements TokenEnhancer {
 		// Adiciona o informacao adicional em um map para adicionar e depois adiciona ao token
 		Map<String, Object> addInfo = new HashMap<>();
 
-		addInfo.put("user_uid", userCustomSystem.getUsername());
+		addInfo.put("user_uid", userCustomSystem.getUserUuid());
 
 		((DefaultOAuth2AccessToken) accesToken).setAdditionalInformation(addInfo);
-
-//		logonHistoryService.auditLogon(userCustomSystem.getUser().getUsername(), "SUCCESS", userCustomSystem.getDevice(),
-//				userCustomSystem.getSector().getCode() + "");
 
 		return accesToken;
 	}

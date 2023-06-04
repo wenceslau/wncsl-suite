@@ -1,9 +1,6 @@
 package com.wncsl.auth.config.oauth;
 
-import com.wncsl.auth.consumer.grpc.GrpcServerInterceptor;
-import com.wncsl.auth.domain.logonhistory.LogonHistory;
 import com.wncsl.auth.domain.logonhistory.LogonHistoryService;
-import com.wncsl.auth.domain.user.User;
 import com.wncsl.security.CustomUser;
 import com.wncsl.security.config.AuthServerSecurityConfig;
 import org.slf4j.Logger;
@@ -16,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -26,11 +22,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.UUID;
 
 /**
  * This class provide HTTP Basic authentication for endpoint /oauth/token
@@ -39,7 +32,7 @@ import java.util.UUID;
  */
 @Configuration
 public class AuthServerConfig extends AuthServerSecurityConfig {
-	private static final Logger log = LoggerFactory.getLogger(GrpcServerInterceptor.class);
+	private final Logger log = LoggerFactory.getLogger(AuthServerConfig.class);
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -101,7 +94,7 @@ public class AuthServerConfig extends AuthServerSecurityConfig {
 	@Bean
 	public TokenEnhancer tokenEnhancer() {
 		System.out.println(this.getClass().getSimpleName()+".tokenEnhancer: "+ LocalTime.now());
-		return new CustomTokenService();
+		return new CustomTokenConfig();
 	}
 
 	/**

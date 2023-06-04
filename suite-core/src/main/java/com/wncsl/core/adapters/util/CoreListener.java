@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class CoreMainListener {
+public class CoreListener {
 
     private Initializer initializer;
 
-    public CoreMainListener(Initializer initializer) {
+    public CoreListener(Initializer initializer) {
         this.initializer = initializer;
     }
 

@@ -15,7 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "permissions")
-@EntityListeners(ListenerModel.class)
 public class PermissionModel extends Model {
 
     private String role;

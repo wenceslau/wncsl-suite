@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class CustomDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private LogonHistoryService logonHistoryService;
+    public CustomDetailsService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     @Transactional
