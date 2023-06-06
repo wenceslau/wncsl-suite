@@ -1,4 +1,4 @@
-package com.wncsl.core.adapters.util;
+package com.wncsl.core.util;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.event.ApplicationStartedEvent;

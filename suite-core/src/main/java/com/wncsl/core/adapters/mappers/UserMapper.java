@@ -58,6 +58,20 @@ public class UserMapper {
                 .build();
     }
 
+    public static UserDTO toDto(UserModel entity) {
+
+        List<PermissionDTO> list = entity.getPermissions().stream()
+                .map(p -> PermissionMapper.toDto(p))
+                .collect(Collectors.toList());
+
+        return UserDTO.builder()
+                .uuid(entity.getUuid())
+                .name(entity.getName())
+                .username(entity.getUsername())
+                .permissions(list)
+                .build();
+    }
+
     public static UserGrpc toGrpc(UserModel entity, ACTION action){
 
         List<PermissionGrpc> lst = entity.getPermissions()

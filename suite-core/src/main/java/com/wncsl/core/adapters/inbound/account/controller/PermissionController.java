@@ -1,14 +1,17 @@
-package com.wncsl.core.adapters.inbound.rest.account.controller;
+package com.wncsl.core.adapters.inbound.account.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
-import com.wncsl.core.adapters.inbound.rest.account.service.PermissionService;
+import com.wncsl.core.adapters.inbound.account.service.PermissionService;
+import com.wncsl.core.adapters.mappers.dto.ViewPage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 import static com.wncsl.core.adapters.mappers.dto.View.*;
@@ -24,10 +27,12 @@ public class PermissionController  {
     }
 
     @GetMapping()
-    @JsonView({Full.class})
+    @JsonView({Resume.class})
     @PreAuthorize(authView)
-    public ResponseEntity<List<PermissionDTO>> listAll() {
-        return ResponseEntity.status(HttpStatus.CREATED).body(permissionService.listAll());
+    public ResponseEntity<Page<PermissionDTO>> listAll(
+            @PageableDefault() Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ViewPage<>(permissionService.listAll(pageable), pageable));
     }
 
     @PostMapping

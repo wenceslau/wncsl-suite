@@ -1,25 +1,29 @@
-package com.wncsl.core.adapters.inbound.rest.account.service;
+package com.wncsl.core.adapters.inbound.account.service;
 
 import com.wncsl.core.adapters.mappers.PermissionMapper;
+import com.wncsl.core.adapters.outbound.persistence.account.repository.PermissionJpaRepository;
 import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.PermissionFactory;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
-import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class PermissionService {
 
     private final PermissionDomainServicePort permissionDomainServicePort;
+    //Does not make sense queries through the domain layer, so for List pageable, the inbound access directly the outbound
+    private final PermissionJpaRepository permissionJpaRepository;
 
-    public PermissionService(PermissionDomainServicePort permissionDomainServiceImpl) {
+    public PermissionService(PermissionDomainServicePort permissionDomainServiceImpl,
+                             PermissionJpaRepository permissionJpaRepository) {
 
         this.permissionDomainServicePort = permissionDomainServiceImpl;
+        this.permissionJpaRepository = permissionJpaRepository;
     }
 
     public PermissionDTO create(PermissionDTO permissionDTO){
@@ -48,12 +52,11 @@ public class PermissionService {
         return permissionDTO;
     }
 
-    public List<PermissionDTO> listAll() {
+    public Page<PermissionDTO> listAll(Pageable pageable) {
 
-        return permissionDomainServicePort.fildAll()
-                .stream()
-                .map(p -> PermissionMapper.toDto(p))
-                .collect(Collectors.toList());
+        return permissionJpaRepository.findAll(pageable)
+                .map(p -> PermissionMapper.toDto(p));
+
     }
 
     public PermissionDTO findById(UUID uuid) {

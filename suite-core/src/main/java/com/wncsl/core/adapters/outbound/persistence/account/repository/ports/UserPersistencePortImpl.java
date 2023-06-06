@@ -1,7 +1,8 @@
-package com.wncsl.core.adapters.outbound.persistence.account.repository;
+package com.wncsl.core.adapters.outbound.persistence.account.repository.ports;
 
 import com.wncsl.core.adapters.mappers.UserMapper;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
+import com.wncsl.core.adapters.outbound.persistence.account.repository.UserJpaRepository;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.ports.UserPersistencePort;
 
@@ -42,14 +43,6 @@ public class UserPersistencePortImpl implements UserPersistencePort {
                 .orElseThrow(() -> new RuntimeException("ID "+uuid+" not found!"));
 
         return UserMapper.toEntity(model);
-    }
-
-    @Override
-    public Set<User> findAll() {
-        return userJpaRepository.findAll()
-                .stream()
-                .map(model -> UserMapper.toEntity(model))
-                .collect(Collectors.toSet());
     }
 
     @Override

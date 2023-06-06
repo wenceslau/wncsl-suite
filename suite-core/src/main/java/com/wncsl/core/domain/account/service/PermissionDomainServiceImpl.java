@@ -32,10 +32,6 @@ public class PermissionDomainServiceImpl implements PermissionDomainServicePort 
         return permission.getUuid();
     }
 
-    public Set<Permission> fildAll() {
-        return permissionPersistencePort.findAll();
-    }
-
     public Permission findById(UUID id){
         return permissionPersistencePort.findById(id);
     }

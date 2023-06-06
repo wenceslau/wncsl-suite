@@ -1,4 +1,4 @@
-package com.wncsl.core.adapters.util;
+package com.wncsl.core.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,11 +1,9 @@
-package com.wncsl.core.adapters.util;
+package com.wncsl.core.util;
 
-import com.wncsl.core.adapters.inbound.rest.account.controller.UserController;
-import com.wncsl.core.adapters.inbound.rest.account.service.PermissionService;
-import com.wncsl.core.adapters.inbound.rest.account.service.UserService;
+import com.wncsl.core.adapters.inbound.account.service.PermissionService;
+import com.wncsl.core.adapters.inbound.account.service.UserService;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,12 +49,20 @@ public class Initializer {
                 .role("ROLE_UPDATE_PERMISSION").build();
         lst.add(permissionService.create(permissionDTO));
 
+        permissionDTO = PermissionDTO.builder().description("Authorize view permission")
+                .role("ROLE_VIEW_PERMISSION").build();
+        lst.add(permissionService.create(permissionDTO));
+
         permissionDTO = PermissionDTO.builder().description("Authorize create user")
                 .role("ROLE_CREATE_USER").build();
         lst.add(permissionService.create(permissionDTO));
 
         permissionDTO = PermissionDTO.builder().description("Authorize update user")
                 .role("ROLE_UPDATE_USER").build();
+        lst.add(permissionService.create(permissionDTO));
+
+        permissionDTO = PermissionDTO.builder().description("Authorize view user")
+                .role("ROLE_VIEW_USER").build();
         lst.add(permissionService.create(permissionDTO));
 
         UserDTO userDTO = userService.findByUsername("admin");

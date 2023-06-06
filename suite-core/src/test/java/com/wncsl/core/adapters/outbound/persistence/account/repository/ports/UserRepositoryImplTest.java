@@ -1,6 +1,8 @@
-package com.wncsl.core.adapters.outbound.persistence.account.repository;
+package com.wncsl.core.adapters.outbound.persistence.account.repository.ports;
 
 import com.wncsl.core.adapters.mappers.UserMapper;
+import com.wncsl.core.adapters.outbound.persistence.account.repository.UserJpaRepository;
+import com.wncsl.core.adapters.outbound.persistence.account.repository.ports.UserPersistencePortImpl;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
 import com.wncsl.core.domain.account.entity.UserFactory;

@@ -30,6 +30,14 @@ public class PermissionMapper {
                 .build();
     }
 
+    public static PermissionDTO toDto(PermissionModel entity){
+        return PermissionDTO.builder()
+                .uuid(entity.getUuid())
+                .role(entity.getRole())
+                .description(entity.getDescription())
+                .build();
+    }
+
     public static PermissionGrpc toGrpc(PermissionModel model, ACTION action){
         return PermissionGrpc.newBuilder()
                 .setUuid(String.valueOf(model.getUuid()))

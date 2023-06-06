@@ -1,9 +1,11 @@
-package com.wncsl.core.adapters.inbound.rest.account.controller;
+package com.wncsl.core.adapters.inbound.account.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
-import com.wncsl.core.adapters.inbound.rest.account.service.UserService;
+import com.wncsl.core.adapters.inbound.account.service.UserService;
+import com.wncsl.core.adapters.mappers.dto.ViewPage;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -30,9 +32,10 @@ public class UserController {
     @GetMapping()
     @JsonView({Full.class})
     @PreAuthorize(authView)
-    public ResponseEntity<List<UserDTO>> listAll(
+    public ResponseEntity<Page<UserDTO>> listAll(
             @PageableDefault() Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.listAll(pageable));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ViewPage<>(userService.listAll(pageable), pageable));
     }
 
     @PostMapping

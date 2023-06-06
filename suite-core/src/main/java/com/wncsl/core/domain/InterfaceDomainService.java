@@ -9,7 +9,5 @@ public interface InterfaceDomainService<T> {
 
     UUID update(T entity);
 
-    Set<T> fildAll();
-
     T findById(UUID id);
 }

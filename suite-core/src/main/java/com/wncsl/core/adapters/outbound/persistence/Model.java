@@ -1,6 +1,6 @@
 package com.wncsl.core.adapters.outbound.persistence;
 
-import com.wncsl.core.adapters.util.Util;
+import com.wncsl.core.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

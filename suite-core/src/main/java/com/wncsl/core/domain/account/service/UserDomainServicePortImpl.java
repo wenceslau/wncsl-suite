@@ -38,10 +38,6 @@ public class UserDomainServicePortImpl implements UserDomainServicePort {
         return user.getUuid();
     }
 
-    public Set<User> fildAll() {
-        return userPersistencePort.findAll();
-    }
-
     public User findById(UUID id){
         return userPersistencePort.findById(id);
     }

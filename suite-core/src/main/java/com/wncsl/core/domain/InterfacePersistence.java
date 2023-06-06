@@ -8,6 +8,5 @@ public interface InterfacePersistence<T>
     UUID create(T entity);
     UUID update(T entity);
     T findById(UUID id);
-    Set<T> findAll();
-
+//    Set<T> findAll();
 }

@@ -1,19 +1,20 @@
-package com.wncsl.core.adapters.inbound.rest.account.service;
+package com.wncsl.core.adapters.inbound.account.service;
 
 import com.wncsl.core.adapters.mappers.UserMapper;
+import com.wncsl.core.adapters.outbound.persistence.account.repository.UserJpaRepository;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.entity.UserFactory;
 import com.wncsl.core.domain.account.ports.PermissionDomainServicePort;
 import com.wncsl.core.domain.account.ports.UserDomainServicePort;
 import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import java.util.Base64;
 
@@ -22,18 +23,20 @@ public class UserService {
 
 
     private final PasswordEncoder passwordEncoder;
-
     private final UserDomainServicePort userDomainServicePort;
-
+    //Does not make sense queries through the domain layer, so for List pageable, the inbound access directly the outbound
+    private final UserJpaRepository userJpaRepository;
     private final PermissionDomainServicePort permissionDomainService;
+
 
     public UserService(PasswordEncoder passwordEncoder,
                        UserDomainServicePort userDomainServicePort,
-                       PermissionDomainServicePort permissionDomainService) {
+                       PermissionDomainServicePort permissionDomainService, UserJpaRepository userJpaRepository) {
 
         this.passwordEncoder = passwordEncoder;
         this.userDomainServicePort = userDomainServicePort;
         this.permissionDomainService = permissionDomainService;
+        this.userJpaRepository = userJpaRepository;
     }
 
     public UserDTO create(UserDTO userDTO){
@@ -100,12 +103,9 @@ public class UserService {
         userDomainServicePort.update(user);
     }
 
-    public List<UserDTO> listAll(Pageable pageable) {
-
-        return userDomainServicePort.fildAll()
-                .stream()
-                .map(entity -> UserMapper.toDto(entity))
-                .collect(Collectors.toList());
+    public Page<UserDTO> listAll(Pageable pageable) {
+        return  userJpaRepository.findAll(pageable)
+                .map(entity -> UserMapper.toDto(entity));
     }
 
     public UserDTO findById(UUID uuid) {
