@@ -9,4 +9,7 @@ public interface View {
     interface Insert{}
 
     interface Update{}
+
+    interface Filter {}
+
 }

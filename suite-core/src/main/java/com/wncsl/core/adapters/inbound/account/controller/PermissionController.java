@@ -27,12 +27,13 @@ public class PermissionController  {
     }
 
     @GetMapping()
-    @JsonView({Resume.class})
+    @JsonView({Full.class})
     @PreAuthorize(authView)
-    public ResponseEntity<Page<PermissionDTO>> listAll(
-            @PageableDefault() Pageable pageable) {
+    public ResponseEntity<Page<PermissionDTO>> filter(
+            @JsonView(Filter.class)  PermissionDTO permissionDTO,
+            @PageableDefault(sort = "updated") Pageable pageable) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ViewPage<>(permissionService.listAll(pageable), pageable));
+                .body(new ViewPage<>(permissionService.listAll(pageable, permissionDTO), pageable));
     }
 
     @PostMapping
@@ -45,7 +46,7 @@ public class PermissionController  {
         return ResponseEntity.status(HttpStatus.CREATED).body(permissionDTO);
     }
 
-    @PutMapping("{uuid}")
+    @PutMapping("/{uuid}")
     @JsonView({Full.class})
     @PreAuthorize(authUpdate)
     public ResponseEntity<PermissionDTO> update(
@@ -56,10 +57,10 @@ public class PermissionController  {
         return ResponseEntity.status(HttpStatus.OK).body(permissionDTO);
     }
 
-    @GetMapping("/uuid")
+    @GetMapping("/{uuid}")
     @JsonView({Full.class})
     @PreAuthorize(authView)
-    public ResponseEntity<PermissionDTO> findById(UUID uuid) {
+    public ResponseEntity<PermissionDTO> findById(@PathVariable UUID uuid) {
         PermissionDTO permissionDTO = permissionService.findById(uuid);
         return ResponseEntity.status(HttpStatus.OK).body(permissionDTO);
     }

@@ -52,11 +52,17 @@ public class PermissionService {
         return permissionDTO;
     }
 
-    public Page<PermissionDTO> listAll(Pageable pageable) {
+    public Page<PermissionDTO> listAll(Pageable pageable, PermissionDTO permissionDTO ) {
 
+        if (permissionDTO.getRole()!= null){
+            return permissionJpaRepository.findAllByRoleContainingIgnoreCase(pageable, permissionDTO.getRole())
+                    .map(p -> PermissionMapper.toDto(p));
+        }else if (permissionDTO.getDescription() != null){
+            return permissionJpaRepository.findAllByDescriptionContainingIgnoreCase(pageable, permissionDTO.getDescription())
+                    .map(p -> PermissionMapper.toDto(p));
+        }
         return permissionJpaRepository.findAll(pageable)
                 .map(p -> PermissionMapper.toDto(p));
-
     }
 
     public PermissionDTO findById(UUID uuid) {

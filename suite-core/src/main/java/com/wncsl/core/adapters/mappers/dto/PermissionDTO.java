@@ -13,13 +13,13 @@ import java.util.UUID;
 public class PermissionDTO {
 
 
-    @JsonView({View.Full.class, View.Resume.class })
+    @JsonView({View.Full.class, View.Resume.class, View.Filter.class })
     private UUID uuid;
 
-    @JsonView({View.Full.class, View.Insert.class })
+    @JsonView({View.Full.class, View.Insert.class, View.Filter.class })
     private String role;
 
-    @JsonView({View.Full.class, View.Resume.class, View.Insert.class, View.Update.class })
+    @JsonView({View.Full.class, View.Resume.class, View.Insert.class, View.Update.class, View.Filter.class })
     private String description;
 
 }
