@@ -29,6 +29,7 @@ public class ListenerModel {
     @PrePersist
     public void prePersist(Model model) {
         model.setCreated(LocalDateTime.now());
+        model.setUpdated(LocalDateTime.now());
         System.out.println("@PrePersist: " + model);
     }
 

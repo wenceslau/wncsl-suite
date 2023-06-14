@@ -6,6 +6,7 @@ import com.wncsl.core.adapters.inbound.account.service.PermissionService;
 import com.wncsl.core.adapters.mappers.dto.ViewPage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class PermissionController  {
     @PreAuthorize(authView)
     public ResponseEntity<Page<PermissionDTO>> filter(
             @JsonView(Filter.class)  PermissionDTO permissionDTO,
-            @PageableDefault(sort = "updated") Pageable pageable) {
+            @PageableDefault(sort = "updated", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ViewPage<>(permissionService.listAll(pageable, permissionDTO), pageable));
     }
