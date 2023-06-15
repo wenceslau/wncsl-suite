@@ -34,7 +34,7 @@ public class UserController {
     @PreAuthorize(authView)
     public ResponseEntity<Page<UserDTO>> listAll(
             @PageableDefault() Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ViewPage<>(userService.listAll(pageable), pageable));
     }
 

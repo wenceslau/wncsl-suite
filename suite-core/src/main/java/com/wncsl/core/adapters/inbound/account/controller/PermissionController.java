@@ -33,7 +33,7 @@ public class PermissionController  {
     public ResponseEntity<Page<PermissionDTO>> filter(
             @JsonView(Filter.class)  PermissionDTO permissionDTO,
             @PageableDefault(sort = "updated", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ViewPage<>(permissionService.listAll(pageable, permissionDTO), pageable));
     }
 
