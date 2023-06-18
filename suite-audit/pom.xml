@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>suite-core</name>
-    <description>Micro Service Core</description>
+    <name>suite-audit</name>
+    <description>suite-audit</description>
 
-    <groupId>com.wncsl.suite.core</groupId>
-    <artifactId>suite-core</artifactId>
-    <version>1.0.1</version>
+    <groupId>com.wncsl</groupId>
+    <artifactId>suite-audit</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
     <parent>
         <groupId>com.wncsl.suite.parent</groupId>
@@ -21,13 +21,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.wncsl.suite.proto</groupId>
-            <artifactId>lib-grpc-proto</artifactId>
+            <groupId>com.wncsl.suite.security</groupId>
+            <artifactId>lib-security</artifactId>
             <version>1.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.wncsl.suite.security</groupId>
-            <artifactId>lib-security</artifactId>
+            <groupId>com.wncsl.suite.proto</groupId>
+            <artifactId>lib-grpc-proto</artifactId>
             <version>1.0.1</version>
         </dependency>
 
@@ -44,8 +44,9 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -56,7 +57,7 @@
         <!-- Dependency for spring GRPC-->
         <dependency>
             <groupId>net.devh</groupId>
-            <artifactId>grpc-client-spring-boot-starter</artifactId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
             <version>2.14.0.RELEASE</version>
         </dependency>
 
@@ -75,7 +76,6 @@
         </dependency>
 
     </dependencies>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -87,7 +87,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <build>
         <plugins>
             <plugin>

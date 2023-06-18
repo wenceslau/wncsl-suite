@@ -1,0 +1,40 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: suite-audit
+
+  datasource:
+    username: user
+    url: jdbc:h2:mem:persistence
+    driver-class-name: org.h2.Driver
+    password: pass
+
+  h2:
+    console:
+      enabled: 'true'
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: 'true'
+
+    #main:
+    # allow-bean-definition-overriding: true # Fix error The bean 'metaDataSourceAdvisor' could not be registered. A bean with that name has already been defined and overriding is disabled.
+
+grpc:
+  server:
+    port: 9899
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: false
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
+
+

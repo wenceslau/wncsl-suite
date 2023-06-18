@@ -30,7 +30,7 @@ public class AuthListener {
 
         System.out.println(LocalDateTime.now() + " AccountMainInitialize.applicationReadyEvent() - INIT");
 
-        initializer.init();
+        //initializer.init();
 
         System.out.println(LocalDateTime.now() + " CoreAppListener.applicationReadyEvent() - END");
 

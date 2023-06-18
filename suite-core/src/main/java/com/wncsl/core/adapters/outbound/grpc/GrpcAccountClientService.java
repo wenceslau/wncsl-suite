@@ -46,7 +46,6 @@ public class GrpcAccountClientService {
         }
     }
 
-
     public String addPermission(final PermissionModel permission, ACTION action) {
         try {
             PermissionGrpc request = PermissionMapper.toGrpc(permission, action);

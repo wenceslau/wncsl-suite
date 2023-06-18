@@ -24,9 +24,10 @@ spring:
       fail-on-unknown-properties: 'true'
 
 grpc:
-  auth:
-    username: api
-    password: api123
+  # This authentication was replaced for a persona way
+  # auth:
+  #   username: api
+  #   password: api123
   client:
     auth-grpc-server:
       address: 'discovery:///suite-auth'

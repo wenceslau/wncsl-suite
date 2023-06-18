@@ -23,6 +23,7 @@
         <module>suite-registry</module>
         <module>suite-core</module>
         <module>suite-auth</module>
+        <module>suite-audit</module>
     </modules>
 
     <properties>

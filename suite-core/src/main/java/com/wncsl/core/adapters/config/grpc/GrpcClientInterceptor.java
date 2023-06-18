@@ -1,4 +1,4 @@
-package com.wncsl.core.adapters.outbound.grpc;
+package com.wncsl.core.adapters.config.grpc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

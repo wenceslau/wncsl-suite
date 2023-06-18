@@ -1,4 +1,4 @@
-package com.wncsl.auth.consumer.grpc;
+package com.wncsl.auth.config.grpc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

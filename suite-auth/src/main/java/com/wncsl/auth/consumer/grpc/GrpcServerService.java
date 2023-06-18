@@ -11,7 +11,6 @@ import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.annotation.Secured;
 
 @GrpcService
 public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase {
@@ -28,11 +27,11 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     private static final Logger log = LoggerFactory.getLogger(GrpcServerService.class);
 
     @Override
-    @Secured(value = "ROLE_USER_GRPC")
+    //@Secured(value = "ROLE_USER_GRPC")
     public void addUser(UserGrpc request, StreamObserver<Response> responseObserver) {
 
         String message;
-        STATUS status = STATUS.CREATED;
+        STATUS status = null;
         log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getAction());
 
         try {
@@ -65,7 +64,7 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     }
 
     @Override
-    @Secured(value = "ROLE_PERMISSION_GRPC")
+    //@Secured(value = "ROLE_PERMISSION_GRPC")
     public void addPermission(PermissionGrpc request, StreamObserver<Response> responseObserver) {
 
         String message;
@@ -102,7 +101,7 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     }
 
     @Override
-    @Secured(value = "ROLE_CREATE_USER_GRPC")
+    //@Secured(value = "ROLE_CREATE_USER_GRPC")
     public StreamObserver<UserGrpc> createUserStream(StreamObserver<UserList> responseObserver) {
 
         return new StreamObserver<>() {
@@ -132,7 +131,7 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     }
 
     @Override
-   @Secured(value = "ROLE_CREATE_USER_GRPC")
+    //@Secured(value = "ROLE_CREATE_USER_GRPC")
     public StreamObserver<UserGrpc> createUserStreamBidirectional(StreamObserver<UserGrpc> responseObserver) {
 
         return new StreamObserver<>() {

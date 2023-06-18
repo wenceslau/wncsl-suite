@@ -64,7 +64,7 @@
 			<!--<version>The version used here defined on dependencyManagement, Spring Cloud </version>-->
 		</dependency>
 
-		<!-- Dependency for spring client GRPC-->
+		<!-- Dependency for spring GRPC-->
 		<dependency>
 			<groupId>net.devh</groupId>
 			<artifactId>grpc-server-spring-boot-starter</artifactId>

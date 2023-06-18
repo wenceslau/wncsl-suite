@@ -15,7 +15,6 @@ enum STATUS{
   UPDATED = 1;
   DELETED = 2;
   ERROR = 3;
-
 }
 
 message Response {
@@ -23,23 +22,30 @@ message Response {
   int32 code = 2;
   string object = 3;
   string message = 4;
-
 }
 
+message Token {
+  string value = 1;
+}
+
+//Account Service
+
 message UserGrpc {
-  string uuid = 1;
-  string name = 2;
-  string username = 3;
-  string password = 4;
-  repeated PermissionGrpc permissions = 5;
-  ACTION action = 6;
+  Token token = 1;
+  string uuid = 2;
+  string name = 3;
+  string username = 4;
+  string password = 5;
+  repeated PermissionGrpc permissions = 6;
+  ACTION action = 7;
 }
 
 message PermissionGrpc {
-  string uuid = 1;
-  string role = 2;
-  string description = 3;
-  ACTION action = 4;
+  Token token = 1;
+  string uuid = 2;
+  string role = 3;
+  string description = 4;
+  ACTION action = 5;
 }
 
 message UserList {
@@ -51,4 +57,22 @@ service AccountService {
   rpc addPermission(PermissionGrpc) returns (Response) {}
   rpc CreateUserStream(stream UserGrpc) returns (UserList) {}
   rpc CreateUserStreamBidirectional(stream UserGrpc) returns (stream UserGrpc) {}
+}
+
+
+//Audit Service
+
+message UserActionGrpc {
+  Token token = 1;
+  string service = 2;
+  string action = 3;
+  string objectName = 4;
+  string objectUuid = 5;
+  string objectValue = 6;
+  string user = 7;
+  string actionAt = 8;
+}
+
+service AuditService {
+  rpc addUserAction(UserActionGrpc) returns (Response) {}
 }
