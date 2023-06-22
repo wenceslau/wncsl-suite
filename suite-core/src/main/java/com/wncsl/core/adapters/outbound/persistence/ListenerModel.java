@@ -1,10 +1,12 @@
 package com.wncsl.core.adapters.outbound.persistence;
 
+import com.wncsl.core.adapters.mappers.dto.UserActionDTO;
 import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
+import com.wncsl.core.adapters.outbound.grpc.GrpcAuditClientService;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
 import com.wncsl.core.adapters.outbound.persistence.account.repository.PermissionJpaRepository;
-import com.wncsl.grpc.code.ACTION;
+import com.wncsl.grpc.account.ACTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +16,14 @@ import java.time.LocalDateTime;
 @Component
 public class ListenerModel {
     static private GrpcAccountClientService grpcAccountClientService;
+    static private GrpcAuditClientService grpcAuditClientService;
 
     @Autowired
-    public void init(GrpcAccountClientService grpcAccountClientService) {
+    public void init(GrpcAccountClientService grpcAccountClientService,
+                     GrpcAuditClientService grpcAuditClientService) {
         ListenerModel.grpcAccountClientService = grpcAccountClientService;
-        System.out.println("Initializing with dependency ["+ grpcAccountClientService +"]");
+        ListenerModel.grpcAuditClientService = grpcAuditClientService;
+        System.out.println("Initializing with dependency GRPC");
     }
 
     @PreRemove
@@ -42,18 +47,21 @@ public class ListenerModel {
     @PostPersist
     public void postPersist(Model model) {
         System.out.println("@PostPersist: "+model);
+        sendToSuiteAudit(model, ACTION.CREATE);
         sendToSuiteAuth(model, ACTION.CREATE);
     }
 
     @PostUpdate
     public void postUpdate(Model model) {
         System.out.println("@PostUpdate: "+model);
+        sendToSuiteAudit(model, ACTION.UPDATE);
         sendToSuiteAuth(model, ACTION.UPDATE);
     }
 
     @PostRemove
-    public void postDelete(Model target) {
-        System.out.println(target);
+    public void postDelete(Model model) {
+        System.out.println(model);
+        sendToSuiteAudit(model, ACTION.DELETE);
     }
 
     private void sendToSuiteAuth(Model model, ACTION action){
@@ -62,5 +70,19 @@ public class ListenerModel {
         }else if (model instanceof PermissionModel){
             grpcAccountClientService.addPermission((PermissionModel) model, action);
         }
+    }
+
+    private void sendToSuiteAudit(Model model, ACTION action){
+        UserActionDTO actionDTO = UserActionDTO.builder()
+                .service("suite-core")
+                .action(String.valueOf(action))
+                .userUuid("f4441422-112b-11ee-be56-0242ac120002")
+                .objectName(model.getClass().getSimpleName())
+                .objectUuid(String.valueOf(model.getUuid()))
+                .objectValue(model.toString())
+                .actionAt(LocalDateTime.now())
+                .build();
+
+        grpcAuditClientService.addUserAction(actionDTO);
     }
 }

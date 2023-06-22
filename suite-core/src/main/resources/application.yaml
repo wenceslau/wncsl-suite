@@ -30,7 +30,12 @@ grpc:
   #   password: api123
   client:
     auth-grpc-server:
-      address: 'discovery:///suite-auth'
+      address: 'discovery:///suite-auth' # the server is using grpc-server-spring-boot-starter
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+    audit-grpc-server:
+      address: 'static://127.0.0.1:9897' # the server is using simple grpc server
       enableKeepAlive: true
       keepAliveWithoutCalls: true
       negotiationType: plaintext
