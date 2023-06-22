@@ -1,6 +1,7 @@
 package com.wncsl.audit.domain.useraaction;
 
-import com.wncsl.grpc.code.UserActionGrpc;
+
+import com.wncsl.grpc.audit.UserActionGrpc;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -2,26 +2,30 @@ package com.wncsl.audit.consumer.grpc;
 
 import com.wncsl.audit.domain.useraaction.UserActionMapper;
 import com.wncsl.audit.domain.useraaction.UserActionService;
-import com.wncsl.grpc.code.*;
+import com.wncsl.grpc.audit.AuditServiceGrpc;
+import com.wncsl.grpc.audit.Response;
+import com.wncsl.grpc.audit.STATUS;
+import com.wncsl.grpc.audit.UserActionGrpc;
 import io.grpc.stub.StreamObserver;
-import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@GrpcService
-public class GrpcServerService extends AuditServiceGrpc.AuditServiceImplBase {
+@Component
+public class GrpcAuditService extends AuditServiceGrpc.AuditServiceImplBase {
 
-    private final UserActionService userActionService;
+    private static final Logger log = LoggerFactory.getLogger(GrpcAuditService.class);
+    private static UserActionService userActionService;
 
-    public GrpcServerService(UserActionService userActionService) {
-        this.userActionService = userActionService;
+    @Autowired
+    public void init(UserActionService userActionService) {
+        GrpcAuditService.userActionService = userActionService;
+        log.info("Initializing GrpcAuditService with dependency UserActionService");
     }
-
-    private static final Logger log = LoggerFactory.getLogger(GrpcServerService.class);
 
     @Override
     public void addUserAction(UserActionGrpc request, StreamObserver<Response> responseObserver) {
-
         String message;
         STATUS status = STATUS.CREATED;
         log.info(">>>>: Received "+request.getClass().getSimpleName()+" object name... "+request.getObjectName());

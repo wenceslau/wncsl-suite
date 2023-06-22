@@ -21,6 +21,7 @@ public class UserAction {
     private String action;
     private String objectName;
     private String objectUuid;
+    @Column(columnDefinition="MEDIUMTEXT")
     private String objectValue;
     @Column(columnDefinition = "uuid")
     private UUID userUuid;
