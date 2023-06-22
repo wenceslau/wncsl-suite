@@ -4,9 +4,9 @@ import com.wncsl.core.adapters.mappers.PermissionMapper;
 import com.wncsl.core.adapters.mappers.UserMapper;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
-import com.wncsl.grpc.code.*;
-import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceBlockingStub;
-import com.wncsl.grpc.code.AccountServiceGrpc.AccountServiceStub;
+import com.wncsl.grpc.account.*;
+import com.wncsl.grpc.account.AccountServiceGrpc.AccountServiceBlockingStub;
+import com.wncsl.grpc.account.AccountServiceGrpc.AccountServiceStub;
 
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;

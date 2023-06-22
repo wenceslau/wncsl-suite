@@ -8,9 +8,9 @@ import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.PermissionFactory;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.entity.UserFactory;
-import com.wncsl.grpc.code.ACTION;
-import com.wncsl.grpc.code.PermissionGrpc;
-import com.wncsl.grpc.code.UserGrpc;
+import com.wncsl.grpc.account.ACTION;
+import com.wncsl.grpc.account.PermissionGrpc;
+import com.wncsl.grpc.account.UserGrpc;
 
 import java.util.List;
 import java.util.Set;

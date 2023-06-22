@@ -4,8 +4,8 @@ import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.PermissionFactory;
-import com.wncsl.grpc.code.ACTION;
-import com.wncsl.grpc.code.PermissionGrpc;
+import com.wncsl.grpc.account.ACTION;
+import com.wncsl.grpc.account.PermissionGrpc;
 
 public class PermissionMapper {
 
