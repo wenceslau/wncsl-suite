@@ -1,8 +1,8 @@
 syntax = "proto3";
 
+package account;
 option java_multiple_files = true;
-option java_package = "com.wncsl.grpc.code";
-package code;
+option java_package = "com.wncsl.grpc.account";
 
 enum ACTION{
   CREATE = 0;
@@ -57,22 +57,4 @@ service AccountService {
   rpc addPermission(PermissionGrpc) returns (Response) {}
   rpc CreateUserStream(stream UserGrpc) returns (UserList) {}
   rpc CreateUserStreamBidirectional(stream UserGrpc) returns (stream UserGrpc) {}
-}
-
-
-//Audit Service
-
-message UserActionGrpc {
-  Token token = 1;
-  string service = 2;
-  string action = 3;
-  string objectName = 4;
-  string objectUuid = 5;
-  string objectValue = 6;
-  string user = 7;
-  string actionAt = 8;
-}
-
-service AuditService {
-  rpc addUserAction(UserActionGrpc) returns (Response) {}
 }

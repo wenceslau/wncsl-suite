@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package audit;
+option java_multiple_files = true;
+option java_package = "com.wncsl.grpc.audit";
+
+//Audit Service
+
+enum STATUS{
+  CREATED = 0;
+  UPDATED = 1;
+  DELETED = 2;
+  ERROR = 3;
+}
+
+message Token {
+  string value = 1;
+}
+
+message Response {
+  STATUS status = 1;
+  int32 code = 2;
+  string object = 3;
+  string message = 4;
+}
+
+message UserActionGrpc {
+  Token token = 1;
+  string service = 2;
+  string action = 3;
+  string objectName = 4;
+  string objectUuid = 5;
+  string objectValue = 6;
+  string user = 7;
+  string actionAt = 8;
+}
+
+service AuditService {
+  rpc addUserAction(UserActionGrpc) returns (Response) {}
+}
