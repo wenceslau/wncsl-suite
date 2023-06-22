@@ -1,6 +1,6 @@
 package com.wncsl.auth.domain.permission;
 
-import com.wncsl.grpc.code.PermissionGrpc;
+import com.wncsl.grpc.account.PermissionGrpc;
 
 import java.util.UUID;
 

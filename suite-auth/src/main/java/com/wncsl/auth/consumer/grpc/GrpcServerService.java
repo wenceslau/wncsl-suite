@@ -5,8 +5,8 @@ import com.wncsl.auth.domain.permission.PermissionService;
 import com.wncsl.auth.domain.user.User;
 import com.wncsl.auth.domain.user.UserMapper;
 import com.wncsl.auth.domain.user.UserService;
-import com.wncsl.grpc.code.*;
 
+import com.wncsl.grpc.account.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;

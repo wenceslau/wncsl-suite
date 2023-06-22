@@ -1,8 +1,11 @@
 package com.wncsl.auth.config.grpc;
 
 
+import net.devh.boot.grpc.server.security.authentication.AnonymousAuthenticationReader;
 import net.devh.boot.grpc.server.security.authentication.BasicGrpcAuthenticationReader;
 import net.devh.boot.grpc.server.security.authentication.GrpcAuthenticationReader;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,14 +29,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
     If the method is not final it will delegate to the original instance and thus it will bypass any security layer that
     you intend to add, unless you re-implement the #bindService() method on the outermost layer (which Spring does not).
 */
-//@Configuration(proxyBeanMethods = false)
+@Configuration(proxyBeanMethods = false)
 //@EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true) //This override the protected methods to provide custom implementations.
 public class GrpcServerSecurityConfig {
 
     /**
      * Configure which authentication types you support.
+     * this bear is mandatory when we are using the <grpc-server-spring-boot-starter></grpc-server-spring-boot-starter>
      */
-    //@Bean
+    @Bean
     GrpcAuthenticationReader authenticationReader() {
         return new BasicGrpcAuthenticationReader();
         // final List<GrpcAuthenticationReader> readers = new ArrayList<>();
@@ -46,11 +50,11 @@ public class GrpcServerSecurityConfig {
      * One of your authentication providers.
      * They ensure that the credentials are valid and populate the user's authorities.
      */
-    //@Bean
-    DaoAuthenticationProvider daoAuthenticationProvider(final UserDetailsService userDetailsService, final PasswordEncoder passwordEncoder) {
-        final DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
+//    @Bean
+//    DaoAuthenticationProvider daoAuthenticationProvider(final UserDetailsService userDetailsService, final PasswordEncoder passwordEncoder) {
+//        final DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setUserDetailsService(userDetailsService);
+//        provider.setPasswordEncoder(passwordEncoder);
+//        return provider;
+//    }
 }

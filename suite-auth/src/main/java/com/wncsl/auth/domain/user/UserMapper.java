@@ -2,8 +2,8 @@ package com.wncsl.auth.domain.user;
 
 import com.wncsl.auth.domain.permission.Permission;
 import com.wncsl.auth.domain.permission.PermissionMapper;
-import com.wncsl.grpc.code.PermissionGrpc;
-import com.wncsl.grpc.code.UserGrpc;
+import com.wncsl.grpc.account.PermissionGrpc;
+import com.wncsl.grpc.account.UserGrpc;
 
 import java.util.List;
 import java.util.Set;

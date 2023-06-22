@@ -1,9 +1,5 @@
 package com.wncsl.auth.domain.permission;
 
-
-import com.wncsl.auth.domain.user.User;
-import com.wncsl.grpc.code.PermissionGrpc;
-import com.wncsl.grpc.code.UserGrpc;
 import lombok.*;
 
 import javax.persistence.Column;

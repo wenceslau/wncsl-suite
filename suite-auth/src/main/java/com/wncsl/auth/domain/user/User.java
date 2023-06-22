@@ -3,7 +3,6 @@ package com.wncsl.auth.domain.user;
 import javax.persistence.*;
 
 import com.wncsl.auth.domain.permission.Permission;
-import com.wncsl.grpc.code.UserGrpc;
 import lombok.*;
 
 import java.util.HashSet;
