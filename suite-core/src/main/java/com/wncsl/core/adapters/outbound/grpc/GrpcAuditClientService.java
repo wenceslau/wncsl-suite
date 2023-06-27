@@ -4,6 +4,7 @@ import com.wncsl.core.adapters.mappers.UserActionMapper;
 import com.wncsl.core.adapters.mappers.dto.UserActionDTO;
 
 import com.wncsl.grpc.audit.AuditServiceGrpc.AuditServiceBlockingStub;
+import com.wncsl.grpc.audit.OPERATION;
 import com.wncsl.grpc.audit.Response;
 import com.wncsl.grpc.audit.STATUS;
 import com.wncsl.grpc.audit.UserActionGrpc;
@@ -22,11 +23,11 @@ public class GrpcAuditClientService {
     @GrpcClient("audit-grpc-server")
     private AuditServiceBlockingStub auditBlockingStub;
 
-    public String addUserAction(final UserActionDTO userActionDTO) {
+    public String addUserAction(final UserActionDTO userActionDTO, OPERATION operation) {
         try {
-            UserActionGrpc request = UserActionMapper.toGrpc(userActionDTO);
+            UserActionGrpc request = UserActionMapper.toGrpc(userActionDTO, operation);
             final Response response = this.auditBlockingStub.addUserAction(request);
-            if (STATUS.ERROR.equals(response.getStatus())){
+            if (STATUS.FAILURE.equals(response.getStatus())){
                 log.error(response.getMessage());
             }
             return response.getStatus().name();

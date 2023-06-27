@@ -31,22 +31,24 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     public void addUser(UserGrpc request, StreamObserver<Response> responseObserver) {
 
         String message;
-        STATUS status = null;
-        log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getAction());
+        STATUS status = STATUS.SUCCESS;
+        log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getOperation());
 
         try {
-            switch (request.getAction()){
-                case CREATE:
+            switch (request.getOperation()){
+                case INSERT:
                     userService.create(UserMapper.build(request));
-                    status = STATUS.CREATED;
                     break;
-                case UPDATE:
+                case EDIT:
                     userService.update(UserMapper.build(request));
-                    status = STATUS.UPDATED;
+                    break;
+                default:
+                    status = STATUS.FAILURE;
+
             }
             message = "Action successfully";
         }catch (Exception ex){
-            status = STATUS.ERROR;
+            status = STATUS.FAILURE;
             message = ex.getMessage();
             log.error(ex.getMessage(),ex);
         }
@@ -68,22 +70,23 @@ public class GrpcServerService extends AccountServiceGrpc.AccountServiceImplBase
     public void addPermission(PermissionGrpc request, StreamObserver<Response> responseObserver) {
 
         String message;
-        STATUS status = STATUS.CREATED;
-        log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getAction());
+        STATUS status = STATUS.SUCCESS;
+        log.info(">>>>: Received "+request.getClass().getSimpleName()+" uuid... "+request.getUuid() +" for " + request.getOperation());
 
         try {
-            switch (request.getAction()){
-                case CREATE:
+            switch (request.getOperation()){
+                case INSERT:
                     permissionService.create(PermissionMapper.build(request));
-                    status = STATUS.CREATED;
-                    break;
-                case UPDATE:
+                   break;
+                case EDIT:
                     permissionService.update(PermissionMapper.build(request));
-                    status = STATUS.UPDATED;
+                    break;
+                default:
+                    status = STATUS.FAILURE;
             }
             message = "Action successfully";
         }catch (Exception ex){
-            status = STATUS.ERROR;
+            status = STATUS.FAILURE;
             message = ex.getMessage();
             log.error(ex.getMessage(),ex);
         }

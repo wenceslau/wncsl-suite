@@ -35,7 +35,7 @@ grpc:
       keepAliveWithoutCalls: true
       negotiationType: plaintext
     audit-grpc-server:
-      address: 'static://127.0.0.1:9897' # the server is using simple grpc server
+      address: 'static://127.0.0.1:9899' # the server is using simple grpc server
       enableKeepAlive: true
       keepAliveWithoutCalls: true
       negotiationType: plaintext

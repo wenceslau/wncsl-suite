@@ -27,14 +27,14 @@ public class GrpcAuditService extends AuditServiceGrpc.AuditServiceImplBase {
     @Override
     public void addUserAction(UserActionGrpc request, StreamObserver<Response> responseObserver) {
         String message;
-        STATUS status = STATUS.CREATED;
+        STATUS status = STATUS.SUCCESS;
         log.info(">>>>: Received "+request.getClass().getSimpleName()+" object name... "+request.getObjectName());
 
         try {
             userActionService.create(UserActionMapper.build(request));
             message = "Action successfully";
         }catch (Exception ex){
-            status = STATUS.ERROR;
+            status = STATUS.FAILURE;
             message = ex.getMessage();
             log.error(ex.getMessage(),ex);
         }

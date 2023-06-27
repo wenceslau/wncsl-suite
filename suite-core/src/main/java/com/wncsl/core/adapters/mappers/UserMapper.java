@@ -4,11 +4,10 @@ import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.mappers.dto.UserDTO;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
-import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.PermissionFactory;
 import com.wncsl.core.domain.account.entity.User;
 import com.wncsl.core.domain.account.entity.UserFactory;
-import com.wncsl.grpc.account.ACTION;
+import com.wncsl.grpc.account.OPERATION;
 import com.wncsl.grpc.account.PermissionGrpc;
 import com.wncsl.grpc.account.UserGrpc;
 
@@ -72,11 +71,11 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserGrpc toGrpc(UserModel entity, ACTION action){
+    public static UserGrpc toGrpc(UserModel entity, OPERATION operation){
 
         List<PermissionGrpc> lst = entity.getPermissions()
                 .stream()
-                .map(p-> PermissionMapper.toGrpc(p,action))
+                .map(p-> PermissionMapper.toGrpc(p,operation))
                 .collect(Collectors.toList());
 
         return UserGrpc.newBuilder()
@@ -85,7 +84,7 @@ public class UserMapper {
                 .setUsername(entity.getUsername())
                 .setPassword(entity.getPassword())
                 .addAllPermissions(lst)
-                .setAction(action)
+                .setOperation(operation)
                 .build();
     }
 }

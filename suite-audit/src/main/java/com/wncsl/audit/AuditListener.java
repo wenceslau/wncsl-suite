@@ -31,7 +31,6 @@ public class AuditListener {
             } catch (Exception e) {
                 System.err.println(e);
             }
-
         }).start();
 
         System.out.println(LocalDateTime.now() + " AuditListener.applicationReadyEvent() - END");

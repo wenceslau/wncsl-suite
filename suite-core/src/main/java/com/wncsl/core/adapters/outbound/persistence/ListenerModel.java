@@ -5,8 +5,8 @@ import com.wncsl.core.adapters.outbound.grpc.GrpcAccountClientService;
 import com.wncsl.core.adapters.outbound.grpc.GrpcAuditClientService;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.adapters.outbound.persistence.account.model.UserModel;
-import com.wncsl.core.adapters.outbound.persistence.account.repository.PermissionJpaRepository;
-import com.wncsl.grpc.account.ACTION;
+import com.wncsl.grpc.account.OPERATION;
+import com.wncsl.grpc.audit.ACTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,14 +48,14 @@ public class ListenerModel {
     public void postPersist(Model model) {
         System.out.println("@PostPersist: "+model);
         sendToSuiteAudit(model, ACTION.CREATE);
-        sendToSuiteAuth(model, ACTION.CREATE);
+        sendToSuiteAuth(model, OPERATION.INSERT);
     }
 
     @PostUpdate
     public void postUpdate(Model model) {
         System.out.println("@PostUpdate: "+model);
         sendToSuiteAudit(model, ACTION.UPDATE);
-        sendToSuiteAuth(model, ACTION.UPDATE);
+        sendToSuiteAuth(model, OPERATION.EDIT);
     }
 
     @PostRemove
@@ -64,11 +64,11 @@ public class ListenerModel {
         sendToSuiteAudit(model, ACTION.DELETE);
     }
 
-    private void sendToSuiteAuth(Model model, ACTION action){
+    private void sendToSuiteAuth(Model model, OPERATION operation){
         if (model instanceof UserModel){
-            grpcAccountClientService.addUser((UserModel) model, action);
+            grpcAccountClientService.addUser((UserModel) model, operation);
         }else if (model instanceof PermissionModel){
-            grpcAccountClientService.addPermission((PermissionModel) model, action);
+            grpcAccountClientService.addPermission((PermissionModel) model, operation);
         }
     }
 
@@ -83,6 +83,6 @@ public class ListenerModel {
                 .actionAt(LocalDateTime.now())
                 .build();
 
-        grpcAuditClientService.addUserAction(actionDTO);
+        grpcAuditClientService.addUserAction(actionDTO, com.wncsl.grpc.audit.OPERATION.INSERT);
     }
 }

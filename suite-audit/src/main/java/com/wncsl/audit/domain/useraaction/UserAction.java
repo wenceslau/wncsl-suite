@@ -26,4 +26,5 @@ public class UserAction {
     @Column(columnDefinition = "uuid")
     private UUID userUuid;
     private LocalDateTime actionAt;
+    private LocalDateTime created;
 }

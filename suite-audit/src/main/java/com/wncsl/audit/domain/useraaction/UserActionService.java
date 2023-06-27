@@ -1,8 +1,11 @@
 package com.wncsl.audit.domain.useraaction;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserActionService {
@@ -14,13 +17,13 @@ public class UserActionService {
     }
 
     public UserAction create(UserAction userAction){
-
+        userAction.setCreated(LocalDateTime.now());
         return userActionRepository.save(userAction);
     }
 
-    public List<UserAction> listAll(){
+    public Page<UserAction> listAll(Pageable pageable, String uuid, String service, String objectName){
 
-        return userActionRepository.findAll();
+        return userActionRepository.findAllByObjectUuidAndServiceAndObjectName(pageable, uuid, service, objectName);
     }
 
 }

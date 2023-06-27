@@ -4,7 +4,7 @@ import com.wncsl.core.adapters.mappers.dto.PermissionDTO;
 import com.wncsl.core.adapters.outbound.persistence.account.model.PermissionModel;
 import com.wncsl.core.domain.account.entity.Permission;
 import com.wncsl.core.domain.account.entity.PermissionFactory;
-import com.wncsl.grpc.account.ACTION;
+import com.wncsl.grpc.account.OPERATION;
 import com.wncsl.grpc.account.PermissionGrpc;
 
 public class PermissionMapper {
@@ -38,12 +38,12 @@ public class PermissionMapper {
                 .build();
     }
 
-    public static PermissionGrpc toGrpc(PermissionModel model, ACTION action){
+    public static PermissionGrpc toGrpc(PermissionModel model, OPERATION operation){
         return PermissionGrpc.newBuilder()
                 .setUuid(String.valueOf(model.getUuid()))
                 .setRole(model.getRole())
                 .setDescription(model.getDescription())
-                .setAction(action)
+                .setOperation(operation)
                 .build();
     }
 

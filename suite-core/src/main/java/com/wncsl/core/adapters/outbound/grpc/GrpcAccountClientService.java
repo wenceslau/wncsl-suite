@@ -29,11 +29,11 @@ public class GrpcAccountClientService {
     @GrpcClient("auth-grpc-server")
     private AccountServiceStub accountNonBlockingStub;
 
-    public String addUser(final UserModel user, ACTION action) {
+    public String addUser(final UserModel user, OPERATION operation) {
         try {
-            UserGrpc request = UserMapper.toGrpc(user, action);
+            UserGrpc request = UserMapper.toGrpc(user, operation);
             final Response response = this.accountBlockingStub.addUser(request);
-            if (STATUS.ERROR.equals(response.getStatus())){
+            if (STATUS.FAILURE.equals(response.getStatus())){
                 log.error(response.getMessage());
             }
             return response.getStatus().name();
@@ -41,16 +41,16 @@ public class GrpcAccountClientService {
             String error = "FAILED with " + e;
             log.error(error);
             try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            addUser(user,action);
+            addUser(user,operation);
             return error;
         }
     }
 
-    public String addPermission(final PermissionModel permission, ACTION action) {
+    public String addPermission(final PermissionModel permission, OPERATION operation) {
         try {
-            PermissionGrpc request = PermissionMapper.toGrpc(permission, action);
+            PermissionGrpc request = PermissionMapper.toGrpc(permission, operation);
             final Response response = this.accountBlockingStub.addPermission(request);
-            if (STATUS.ERROR.equals(response.getStatus())){
+            if (STATUS.FAILURE.equals(response.getStatus())){
                 log.error(response.getMessage());
             }
             return response.getStatus().name();
@@ -58,7 +58,7 @@ public class GrpcAccountClientService {
             String error = "FAILED with " + e;
             log.error(error);
             try {Thread.sleep(1000);} catch (InterruptedException ex) { }
-            addPermission(permission, action);
+            addPermission(permission, operation);
             return error;
         }
     }
@@ -70,7 +70,7 @@ public class GrpcAccountClientService {
             @Override
             public void onNext(UserGrpc next) {
                 processed++;
-                log.info("Processed: " + next.getUuid() + " "+ next.getAction());
+                log.info("Processed: " + next.getUuid() + " "+ next.getOperation());
             }
 
             @Override
@@ -88,7 +88,7 @@ public class GrpcAccountClientService {
 
         try {
             for (UserModel user : userList) {
-                UserGrpc userGrpc = UserMapper.toGrpc(user, ACTION.CREATE);
+                UserGrpc userGrpc = UserMapper.toGrpc(user, OPERATION.INSERT);
                 requestObserver.onNext(userGrpc);
             }
         } catch (RuntimeException e) {

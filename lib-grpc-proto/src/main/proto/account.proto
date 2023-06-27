@@ -4,19 +4,18 @@ package account;
 option java_multiple_files = true;
 option java_package = "com.wncsl.grpc.account";
 
-enum ACTION{
-  CREATE = 0;
-  UPDATE = 1;
-  DELETE = 2;
+enum OPERATION {
+  INSERT = 0;
+  EDIT = 1;
+  REMOVE = 2;
+  RETRIEVE = 3;
 }
 
 enum STATUS{
-  CREATED = 0;
-  UPDATED = 1;
-  DELETED = 2;
-  ERROR = 3;
+  SUCCESS = 0;
+  FAILURE = 1;
+  DENIED = 2;
 }
-
 message Response {
   STATUS status = 1;
   int32 code = 2;
@@ -37,7 +36,7 @@ message UserGrpc {
   string username = 4;
   string password = 5;
   repeated PermissionGrpc permissions = 6;
-  ACTION action = 7;
+  OPERATION operation = 7;
 }
 
 message PermissionGrpc {
@@ -45,7 +44,7 @@ message PermissionGrpc {
   string uuid = 2;
   string role = 3;
   string description = 4;
-  ACTION action = 5;
+  OPERATION operation = 5;
 }
 
 message UserList {
